@@ -1,0 +1,6 @@
+@echo off
+echo Starting backend...
+start cmd /k "cd backend && node index"
+timeout /t 5
+echo Starting frontend...
+start cmd /k "cd frontend && npm run start"
