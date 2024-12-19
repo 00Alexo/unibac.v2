@@ -2,9 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const bcrypt = require('bcryptjs');
 const app = express();
-
+const userRoutes = require('./routes/userRoutes');
 
 const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
 
@@ -27,6 +26,7 @@ app.use((req, res, next) =>{
     }
     next();
  })
+app.use('/api/user', userRoutes)
 
  mongoose.connect(process.env.mongoDB)
  .then(() => {
