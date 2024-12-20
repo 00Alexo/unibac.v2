@@ -1,8 +1,10 @@
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenuToggle, NavbarMenu, NavbarMenuItem, Link, Button, Input,
-Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from "@nextui-org/react";
+Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Avatar} from "@nextui-org/react";
 import React from 'react'
 import {useState} from 'react'
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../hooks/useAuthContext";
+import {useLogout} from '../hooks/useLogout'
 
 export const SearchIcon = ({size = 24, strokeWidth = 1.5, width, height, ...props}) => {
     return (
@@ -35,9 +37,16 @@ export const SearchIcon = ({size = 24, strokeWidth = 1.5, width, height, ...prop
   };
 
 const NavBar = () => {
+    const {user} = useAuthContext();
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
+
+    const {logout} = useLogout();
+
+  const handleLogoutClick = () =>{
+    logout();
+  }
 
     const menuItems = [
         "Nothing here yet",
@@ -129,11 +138,48 @@ const NavBar = () => {
             type="search"
             />
         </NavbarItem>
+        {!user &&
         <NavbarItem>
-          <Button  color="primary" variant="flat" onPress = {() => navigate("/signup")}>
-            Sign Up
+          <Button  color="primary" variant="flat" onPress = {() => navigate("/signin")}>
+            Sign In
           </Button>
         </NavbarItem>
+        }
+        {user &&
+        <NavbarItem>
+          <Dropdown placement="bottom-end">
+            <DropdownTrigger>
+              <Avatar
+                isBordered
+                color = "primary"
+                showFallback
+                name = {user.username.charAt(0).toUpperCase()}
+                as="button"
+                className="transition-transform"
+                src={' '}
+              />
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Profile Actions" variant="flat">
+              <DropdownSection showDivider>
+                <DropdownItem key="profil" onPress={() => navigate(`/profile/${user.username}`)}>
+                  Profil
+                </DropdownItem>
+                <DropdownItem key="settings" onPress={() => navigate(`/profile/${user.username}/setari`)}>
+                  Setari
+                </DropdownItem>
+              </DropdownSection>
+              <DropdownSection showDivider>
+                <DropdownItem key="teme" onPress={() => navigate(`/profile/${user.username}/teme`)}>
+                  Nothing Here Yet
+                </DropdownItem>
+              </DropdownSection>
+              <DropdownItem key="logout" color="danger" className="text-danger" onPress={handleLogoutClick}>
+                Log Out
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </NavbarItem>
+        }
       </NavbarContent>
       <NavbarMenu className="bg-[#f9f9f9]">
         <Input

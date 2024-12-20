@@ -17,44 +17,46 @@ const signup = async(req, res) =>{
     try{
         const {username, email, password, confirmPassword, statut} = req.body;
         const saltRounds = 12; let errorFields = [];
-        if (!email) errorFields.push("email");
-        if (!username) errorFields.push("username");
-        if (!password) errorFields.push("pass");
-        if (!confirmPassword) errorFields.push("cpass");
-        if (!statut) errorFields.push("statut");
+
+        if (!username) errorFields.push({field: "username", error: "Acest camp este obligatoriu!"});
+        if (!password) errorFields.push({field: "pass", error: "Acest camp este obligatoriu!"});
+        if (!confirmPassword) errorFields.push({field: "cpass", error: "Acest camp este obligatoriu!"});
+        if (!statut) errorFields.push({field: "statut", error: "Acest camp este obligatoriu!"});
+        if (!email) errorFields.push({field: "email", error: "Acest camp este obligatoriu!"});
         
         if (errorFields.length > 0) {
             return res.status(400).json({error: 'Toate campurile sunt obligatorii!', errorFields: errorFields});
         }
 
-        if(password !== confirmPassword){
-            errorFields.push("pass");
-            errorFields.push("cpass");
-            return res.status(400).json({error:"Parolele nu sunt identice", errorFields: errorFields});
+        if(!schema.validate(password)){
+            errorFields.push({field: "pass", error: "Parola nu are minim 7 caractere, o litera mare si 2 cifre!"});
+            errorFields.push({field: "cpass", error: ""});
+            return res.status(400).json({error: 'Parola nu are minim 7 caractere, o litera mare si 2 cifre!', errorFields: errorFields})
         }
 
-        if(!schema.validate(password)){
-            errorFields.push("pass");
-            return res.status(400).json({error: 'Parola trebuie sa aiba minim 7 caractere, o litera mare, mica si 2 cifre!', errorFields: errorFields})
+        if(password !== confirmPassword){
+            errorFields.push({field: "pass", error: "Parolele nu sunt identice!"});
+            errorFields.push({field: "cpass", error: ""});
+            return res.status(400).json({error:"Parolele nu sunt identice", errorFields: errorFields});
         }
 
         const existingUser = await userModel.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
         if(existingUser){
-            errorFields.push("username");
+            errorFields.push({field: "username", error: "Usernameul este deja folosit!"});
             return res.status(400).json({ error: 'Usernameul este deja folosit!', errorFields: errorFields});
         }
 
         if(!email.includes('@') && !email.includes('+') && !email.includes('%')){
-            errorFields.push("email");
+            errorFields.push({field: "email", error: "Emailul invalid!"});
             return res.status(400).json({error:"Email invalid!", errorFields: errorFields});
         }
         if(!/^[a-zA-Z0-9.]*$/.test(username)){
-            errorFields.push("username");
+            errorFields.push({field: "username", error: "Numele poate sa contina doar litere din alfabetul englez!"});
             return res.status(400).json({error: 'Numele poate sa contina doar litere din alfabetul englez!', errorFields: errorFields});
         }
         const existingEmail = await userModel.findOne({email})
         if(existingEmail){
-            errorFields.push("email");
+            errorFields.push({field: "email", error: "Emailul este deja folosit!"});
             return res.status(400).json({error:'Emailul este deja folosit!', errorFields: errorFields})
         }
 
@@ -78,11 +80,12 @@ const signup = async(req, res) =>{
 
 const signin = async(req, res) =>{
     try{
+        console.log('test');
         const {username, password} = req.body;
         let errorFields = [];
 
-        if (!username) errorFields.push("username");
-        if (!password) errorFields.push("pass");
+        if (!username) errorFields.push({field: "username", error: "Acest camp este obligatoriu!"});
+        if (!password) errorFields.push({field: "pass", error: "Acest camp este obligatoriu!"});
         if (errorFields.length > 0) {
             return res.status(400).json({error: 'Toate campurile sunt obligatorii!', errorFields: errorFields});
         }
@@ -98,9 +101,9 @@ const signin = async(req, res) =>{
 
         let user;
         if(isEmail)
-            user = await userModel.findOne({email: username.toLowerCase()});
+            user = await userModel.findOne({email: username});
         else
-            user = await userModel.findOne({username: username});
+            user = await userModel.findOne({username: username.toLowerCase()});
 
         if(user){
             const passMatch = await bcrypt.compare(password, user.password);
@@ -111,12 +114,12 @@ const signin = async(req, res) =>{
                 res.status(200).json({username:user.username, token});
             }
             else{
-                errorFields.push("pass")
+                errorFields.push({field: "pass", error: "Parola incorecta!"});
                 return res.status(400).json({error: 'Parola incorecta!', errorFields});
             }
         }
         else
-            return res.status(400).json({error: 'Contul nu exista!', errorFields: ["pass", "username"]} );
+            return res.status(400).json({error: 'Contul nu exista!', errorFields: [{field:"username", error:"Acest cont nu exista!"}]} );
     }catch(error){
         console.error(error.message);
         return res.status(400).json(error.message);
