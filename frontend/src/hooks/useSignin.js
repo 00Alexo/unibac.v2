@@ -12,7 +12,7 @@ export const useSignin = () =>{
     const signin = async(username, password) =>{
         setError(null);
         setErrorFields([]);
-        setIsLoading(false);
+        setIsLoading(true);
 
         const response = await fetch(`${process.env.REACT_APP_API}/api/user/signin`, {
             method: 'POST',

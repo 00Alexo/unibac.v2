@@ -1,4 +1,4 @@
-import { Button, Input,  } from "@nextui-org/react";
+import { Button, Input,  Spinner} from "@nextui-org/react";
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import { useSignin } from "../hooks/useSignin";
@@ -85,7 +85,7 @@ const SignIn = () => {
         return <NotFound/>
 
     return (
-        <div className="mx-auto mt-[15vh] border-2 border-secondary rounded-xl p-6 pb-1 max-w-[95vw] w-[400px] animate-slideIn">
+        <div className="mx-auto mt-[20vh] border-2 border-secondary rounded-xl p-6 pb-1 max-w-[95vw] w-[400px] animate-slideIn">
             <form>
                 <div className="flex flex-col gap-4">
                     <div className="flex w-full flex-wrap md:flex-nowrap md:mb-0">
@@ -97,6 +97,7 @@ const SignIn = () => {
                                 : null
                         }
                         classNames={{
+                            helperWrapper: "p-0 pb-1",
                             errorMessage: "absolute"
                         }}
                         label="Username or email" type="username" variant="bordered" isClearable/>
@@ -110,6 +111,7 @@ const SignIn = () => {
                                     : null
                             }
                             classNames={{
+                                helperWrapper: "p-0 pb-1",
                                 errorMessage: "absolute"
                             }}
                             value={password} onChange={(e) => setPassword(e.target.value)}
@@ -134,9 +136,9 @@ const SignIn = () => {
                     </div>
                 </div>
                 <div className="mt-5">
-                    <Button onPress={() => handleSubmit()}
+                    <Button isDisabled={isLoading} onPress={() => handleSubmit()}
                     variant="bordered" className="hover:bg-black hover:text-white w-full" size="lg">
-                        Sign In
+                        Sign In {isLoading && <Spinner/>}
                     </Button>
                 </div>
                 <div className="text-center mt-2">

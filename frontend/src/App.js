@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import NavBar from './components/NavBar';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -10,6 +11,10 @@ function App() {
       <div className="App">
         <NavBar/>
         <Routes>
+          <Route
+            path="*"
+            element={<NotFound/>}
+          />
           <Route 
             path="/" 
             element={<Home />} 
