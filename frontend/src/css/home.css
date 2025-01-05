@@ -591,4 +591,102 @@
       transform: translate(-125px, -80px) scale(0);
     }
   }
+
+
+
+
+
+  /*alerts*/
+
+  .checkmark__circle{
+    stroke-dasharray: 166;stroke-dashoffset: 166;stroke-width: 2;stroke-miterlimit: 10;
+    stroke: #7ac142;fill: none;animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards
+}
+
+.checkmark{
+    width: 26px;height: 26px;border-radius: 50%;display: block;stroke-width: 2;stroke: #fff;
+    stroke-miterlimit: 10;box-shadow: inset 0px 0px 0px #7ac142;
+    animation: fillCheckmark .5s ease-in-out .4s forwards, scaleCheckmark .4s ease-in-out .9s both
+}
+
+.checkmark__check{
+    transform-origin: 50% 50%;stroke-dasharray: 48;stroke-dashoffset: 48;
+    animation: strokeCheckmark 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards
+}
+
+.crossmark {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: block;
+    stroke-width: 2;
+    stroke: #fff;
+    stroke-miterlimit: 10;
+    box-shadow: inset 0px 0px 0px #7ac142;
+    animation: fillCross .5s ease-in-out .5s forwards, scaleCheckmark .4s ease-in-out .9s both;
+  }
+  
+  .crossmark_circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+    stroke: #c43154;
+    fill: none;
+    animation: strokeCheckmark 0.7s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+  }
+  
+  .crossmark_check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: strokeCheckmark 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+  }
+
+@keyframes strokeCheckmark{
+    100%{stroke-dashoffset: 0}
+}
+
+@keyframes scaleCheckmark{
+    0%, 100%{transform: none}50%{transform: scale3d(1.1, 1.1, 1)}
+}
+
+@keyframes fillCheckmark{
+    100%{box-shadow: inset 0px 0px 0px 30px #7ac142}
+}
+
+@keyframes fillCross{
+    100%{box-shadow: inset 0px 0px 0px 30px #c43154}
+}
+
+.snippet-notification{
+    gap: 10px;
+    display: flex !important;
+    align-items: center;
+    flex-direction: row !important;
+}
+
+.anim-snippet{
+    animation: slideSnippet 0.5s ease-in-out;
+}
+
+@keyframes slideSnippet {
+    0%{
+        opacity: 0;
+        transform: translateX(-100%);
+    }100%{
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
+
+@media (max-width: 768px) {
+    .anim-snippet{
+        font-size: 0.7rem;
+        p{
+            word-break: break-word; /* Rupe cuvintele lungi */
+            white-space: normal
+        }
+    }
+}
   

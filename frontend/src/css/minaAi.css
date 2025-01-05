@@ -1,0 +1,171 @@
+@keyframes slideIn{
+    0%{
+        opacity: 0;
+        transform: translateX(-100%);
+    }100%{
+        opacity: 1;
+        transform: translateX(0%);
+    }
+}
+
+
+
+.minaAi-principal{
+    display:flex;
+    flex-direction: row;
+}
+
+.sidebar-minaAi{
+    animation: slideIn 0.3s ease-in-out;
+    z-index: 2;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    background-color: #1E1F20;
+    height:calc(100vh - 65px);
+    width: 250px;
+    justify-content: space-between;
+}
+
+.sidebar-minaAi h1{
+    font-size: 2rem;
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 2px;
+}
+
+.sidebar-minaAi-bottompart{
+    padding-top: 5px;
+    font-size: 1.3rem;
+    padding-left: 15px;
+    padding-bottom:10px;
+}
+
+
+.minaAi-byyou{
+    padding-top:5px;
+    padding-left: 15px;
+    height: calc(100% - 90px);
+}
+
+.minaAi-byyou p{
+    color: #c2c2ac;
+}
+
+.minaAi-byyou div div{
+    border-radius: 5px;
+}
+
+.minaAi-byyou div div:hover{
+    background-color: #151414;
+}
+
+
+.chat-minaAi{
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 65px);
+    width: calc(100% - 250px);
+    gap:0px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-left: auto;
+}
+
+.prompt-ideas-mina{
+    width: 200px;
+    height: 200px;
+    background-color: #1E1F20;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (max-width: 1325px) {
+    .prompt-hidden-mina{
+        display: none !important;
+    }
+}
+
+@media (max-width: 840px){
+    .mina-contains-prompt-ideas{
+        flex-direction: column !important;
+        gap:20px;
+    }
+
+    .mina-contains-prompt-ideas div{
+        height: 60px;
+        width: 100%;
+    }
+
+    .mina-contains-prompt-ideas p{
+        padding-right: 35px;
+    }
+
+    .iconitaSend{
+        margin-top: 10px;
+        position: absolute;
+    }
+}
+
+@media (max-width: 725px){
+    .chat-minaAi{
+        width: 100%;
+    }
+    .prompt-ideas-mina{
+        font-size: 0.8rem;
+    }
+}
+
+
+
+
+
+
+.dot-flashing {
+    position: relative;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #0070F0;
+    color: #0070F0;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+}
+.dot-flashing::before, .dot-flashing::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    top: 0;
+}
+.dot-flashing::before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #0070F0;
+    color: #0070F0;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 0s;
+}
+.dot-flashing::after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #0070F0;
+    color: #0070F0;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 1s;
+}
+
+@keyframes dot-flashing {
+    0% {
+        background-color: #0070F0;
+    }
+    50%, 100% {
+        background-color: rgba(0, 112, 240, 0.2);
+    }
+}
