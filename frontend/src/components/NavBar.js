@@ -71,7 +71,7 @@ const NavBar = () => {
       };
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} isBordered maxWidth="full" className="bg-[#f9f9f9]"  
+    <Navbar onMenuOpenChange={setIsMenuOpen} isBordered maxWidth="full" className="bg-navBarPrimar"  
     classNames={{
       item: [
         "flex",

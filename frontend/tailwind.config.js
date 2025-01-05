@@ -35,11 +35,14 @@ module.exports = {
           layout: {}, // light theme layout tokens
           colors: {
             secondary: "#D7D7D7", // Add custom secondary color to light theme
+            navBarPrimar: '#f9f9f9',
           },
         },
         dark: {
           layout: {}, // dark theme layout tokens
-          colors: {},
+          colors: {
+            navBarPrimar: '#000000',
+          },
         },
         // ... custom themes
       },

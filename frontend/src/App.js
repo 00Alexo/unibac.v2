@@ -6,6 +6,7 @@ import SignIn from './pages/SignIn';
 import NotFound from './pages/NotFound';
 import UnityGame from './pages/UnityGame';
 import MinaAi from './pages/MinaAi';
+import {useEffect} from 'react';
 
 function App() {
   return (
@@ -18,6 +19,15 @@ function App() {
 function AppRoutes() {
   const location = useLocation();
   const hideNavBar = location.pathname === '/game';
+  
+  useEffect(() => {
+    if (location.pathname.toLowerCase() === '/minaai' || location.pathname.toLowerCase() === '/minaai/:convId') {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [location]);
+
   return (
     <div className="App">
       {!hideNavBar && <NavBar />}
