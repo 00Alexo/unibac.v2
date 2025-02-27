@@ -5,6 +5,7 @@ import {useState} from 'react'
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../hooks/useAuthContext";
 import {useLogout} from '../hooks/useLogout'
+import { useGetProfile } from "../hooks/useGetProfile";
 
 export const SearchIcon = ({size = 24, strokeWidth = 1.5, width, height, ...props}) => {
     return (
@@ -41,6 +42,7 @@ const NavBar = () => {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const [search, setSearch] = useState("");
     const navigate = useNavigate();
+    const { viewUser: userData, refetchProfile} = useGetProfile(user?.username);
 
     const {logout} = useLogout();
 
@@ -101,19 +103,187 @@ const NavBar = () => {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem className="dropdownHead"style={{cursor:'pointer'}}>
           <Link color="foreground">
-            Features
+            Bibliografie
           </Link>
         </NavbarItem>
-        <NavbarItem className="dropdownHead"style={{cursor:'pointer'}}>
-          <Link color="foreground">
-            Customers
-          </Link>
-        </NavbarItem>
-        <NavbarItem className="dropdownHead"style={{cursor:'pointer'}}>
-          <Link color="foreground">
-            Integrations
-          </Link>
-        </NavbarItem>
+        <Dropdown>
+          <NavbarItem style={{cursor:'pointer'}} className="dropdownHead">
+            <DropdownTrigger>
+              <Link color="foreground">
+                Subiecte
+              </Link>
+            </DropdownTrigger>
+          </NavbarItem>
+          <DropdownMenu variant="faded"
+          itemClasses={{
+            base: "gap-4",
+          }}>
+          <DropdownSection showDivider={userData?.statut=="profesor"} title="Elevi"> 
+          <DropdownItem
+            onClick={() => navigate('/subiecte/informatica')}
+            key="Informatica"
+          >
+            Informatica
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/matematica')}
+            key="Matematica"
+          >
+            Matematica
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/fizica')}
+            key="Fizica"
+          >
+            Fizica
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/chimie')}
+            key="Chimie"
+          >
+            Chimie
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/romana')}
+            key="Romana"
+          >
+            Romana
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/biologie')}
+            key="Biologie"
+          >
+            Biologie
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/Istorie')}
+            key="Istorie"
+          >
+            Istorie
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/geografie')}
+            key="Geografie"
+          >
+            Geografie
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => navigate('/subiecte/Psihologie')}
+            key="Psihologie"
+          >
+            Psihologie
+          </DropdownItem>
+          </DropdownSection>
+          {userData?.statut=="profesor" &&
+          <DropdownSection  title="Profesori">
+            <DropdownItem
+              onClick={() => navigate('/subiecte/posteaza')}
+              key="Posteaza"
+            >
+              Posteaza un subiect
+            </DropdownItem>
+          </DropdownSection>
+          }
+        </DropdownMenu>
+        </Dropdown>
+        <Dropdown>
+          <NavbarItem style={{cursor:'pointer'}} className="dropdownHead">
+            <DropdownTrigger>
+              <Link color="foreground">
+                Features
+              </Link>
+            </DropdownTrigger>
+          </NavbarItem>
+            <DropdownMenu variant="faded"
+            itemClasses={{
+              base: "gap-4",
+            }}>
+            <DropdownItem onClick={() => {navigate('/minaAi'); window.location.reload();}}
+              key="MinaAi"
+            >
+              MinaAi
+            </DropdownItem>
+            <DropdownItem onClick={() => {navigate('/compiler')}}
+              key="MinaAi"
+            >
+              Compiler
+            </DropdownItem>
+            <DropdownItem onClick={() => navigate('/games')}
+              key="Games"
+            >
+              Games
+            </DropdownItem>
+            <DropdownItem onClick={() => navigate('/subiecte')}
+              key="SubiecteList"
+            >
+              Subiecte
+            </DropdownItem>
+            <DropdownItem onClick={() => navigate('/clase')}
+              key="clase"
+            >
+              Clase
+            </DropdownItem>
+            <DropdownItem onClick={() => navigate('/concursuri')}
+              key="concursuri"
+            >
+              Concursuri
+            </DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        {userData?.statut === 'profesor' &&
+          <Dropdown>
+              <NavbarItem style={{cursor:'pointer'}}className="dropdownHead">
+                <DropdownTrigger>
+                  <Link color="foreground">
+                    Profesori
+                  </Link>
+                </DropdownTrigger>
+              </NavbarItem>
+                <DropdownMenu variant="faded"
+                itemClasses={{
+                  base: "gap-4",
+                }}>
+                <DropdownSection showDivider title="Subiecte"> 
+                  <DropdownItem onClick={() => {navigate('/subiecte/posteaza')}}
+                    key="Subiect"
+                  >
+                    Posteaza un subiect
+                  </DropdownItem>
+                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/subiecte`)}}
+                    key="Subiect"
+                  >
+                    Subiecte postate de tine
+                  </DropdownItem>
+                </DropdownSection>
+                
+                <DropdownSection showDivider title="Articole"> 
+                  <DropdownItem onClick={() => {navigate('/articole/posteaza')}}
+                    key="Subiect"
+                  >
+                    Posteaza un articol
+                  </DropdownItem>
+                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/idkyet`)}}
+                    key="Subiect"
+                  >
+                    Articole postate de tine
+                  </DropdownItem>
+                </DropdownSection>
+
+                <DropdownSection showDivider title="Clase"> 
+                  <DropdownItem onClick={() => {navigate('/creazaClasa')}}
+                    key="Subiect"
+                  >
+                    Creeaza o clasa
+                  </DropdownItem>
+                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/idkyet`)}}
+                    key="Subiect"
+                  >
+                    Clasele tale
+                  </DropdownItem>
+                </DropdownSection>
+              </DropdownMenu>
+          </Dropdown>
+        }
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">

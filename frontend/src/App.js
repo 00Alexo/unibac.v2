@@ -7,6 +7,8 @@ import NotFound from './pages/NotFound';
 import UnityGame from './pages/UnityGame';
 import MinaAi from './pages/MinaAi';
 import {useEffect} from 'react';
+import PosteazaSubiect from './pages/PosteazaSubiect';
+import Crop from './testing/crop';
 
 function App() {
   return (
@@ -21,7 +23,7 @@ function AppRoutes() {
   const hideNavBar = location.pathname === '/game';
   
   useEffect(() => {
-    if (location.pathname.toLowerCase() === '/minaai' || location.pathname.toLowerCase() === '/minaai/:convId') {
+    if (/^\/minaai(\/.*)?$/.test(location.pathname.toLowerCase())) { // regex pt a face navbaru dark la minaAi
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
@@ -33,13 +35,21 @@ function AppRoutes() {
       {!hideNavBar && <NavBar />}
       <Routes>
         <Route path="*" element={<NotFound />} />
+
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+
         <Route path="/game" element={<UnityGame />} />
+
         <Route  path="/minaAI" element={<MinaAi/>} />
         <Route path="/minaAI/:convId" element={<MinaAi/>} />
+
+        <Route path="/subiecte/posteaza" element={<PosteazaSubiect/>}/>
+
+        <Route path="/crop" element={<Crop/>}/>
       </Routes>
     </div>
   );

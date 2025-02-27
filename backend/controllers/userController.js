@@ -67,7 +67,8 @@ const signup = async(req, res) =>{
             email,
             password: hashedPassword,
             statut,
-            adminPerms: false
+            adminPerms: false,
+            prompts: []
         }
         const user = await userModel.create(data);
         const token = createToken(user._id);
@@ -126,7 +127,21 @@ const signin = async(req, res) =>{
     }
 }
 
+const getUserProfile = async (req, res) =>{
+    try{
+        const {username} = req.params;
+        const user = await userModel.findOne({username: username.toLowerCase()}).select(`-password -userIp `)
+        if(!user){
+            return res.status(404).json({ error: 'Acest utilizator nu exista!' });
+        }
+        res.status(200).json(user);
+    }catch(error){
+        res.status(400).json(error.message);
+    }
+}
+
 module.exports={
     signup,
-    signin
+    signin,
+    getUserProfile
 }

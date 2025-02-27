@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
     adminPerms:{
         type: String,
         required: true,
+    },
+    prompts:{
+        type: Array,
+        required: true,
     }
   }, {timestamps: true});
   

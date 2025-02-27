@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import './css/home.css';
 import './css/minaAi.css';
+import './css/others.css'
 import { NextUIProvider } from '@nextui-org/react';
 import App from './App';
 import {AuthContextProvider} from './context/AuthContext'

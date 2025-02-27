@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
 const userRoutes = require('./routes/userRoutes');
+const minaAiRoutes = require('./routes/minaAiRoutes');
 
 const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
 
@@ -27,6 +28,7 @@ app.use((req, res, next) =>{
     next();
  })
 app.use('/api/user', userRoutes)
+app.use('/api/minaAi', minaAiRoutes);
 
  mongoose.connect(process.env.mongoDB)
  .then(() => {
