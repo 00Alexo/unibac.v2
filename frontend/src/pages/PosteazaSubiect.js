@@ -110,8 +110,22 @@ const PosteazaSubiect = () => {
                         <input
                             className="hidden"
                             onChange={(e) => {
-                                setSubiect(e.target.files[0]);
-                                console.log(e.target.files[0]);
+                                const file = e.target.files[0];
+                            
+                                if (file) {
+                                  const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+                                  
+                                  if (validTypes.includes(file.type)) {
+                                    setSubiect(file);
+                                    console.log("Fișier valid:", file);
+                                  } else {
+                                    setError("Doar fișiere PNG, JPG, JPEG și WEBP sunt permise!");
+                                    setTimeout(()=>{
+                                        setError(null);
+                                    }, 7000)
+                                    e.target.value = "";
+                                  }
+                                }
                             }}
                             type="file"
                             name="file-input-subiect"
@@ -129,8 +143,22 @@ const PosteazaSubiect = () => {
                         <input
                             className="hidden"
                             onChange={(e) => {
-                                setBarem(e.target.files[0]);
-                                console.log(e.target.files[0]);
+                                const file = e.target.files[0];
+                            
+                                if (file) {
+                                  const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+                                  
+                                  if (validTypes.includes(file.type)) {
+                                    setBarem(file);
+                                    console.log("Fișier valid:", file);
+                                  } else {
+                                    setError("Doar fișiere PNG, JPG, JPEG și WEBP sunt permise!");
+                                    setTimeout(()=>{
+                                        setError(null);
+                                    }, 7000)
+                                    e.target.value = "";
+                                  }
+                                }
                             }}
                             type="file"
                             name="file-input-barem"

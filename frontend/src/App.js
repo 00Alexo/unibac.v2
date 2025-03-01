@@ -4,11 +4,10 @@ import NavBar from './components/NavBar';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
 import NotFound from './pages/NotFound';
-import UnityGame from './pages/UnityGame';
 import MinaAi from './pages/MinaAi';
 import {useEffect} from 'react';
 import PosteazaSubiect from './pages/PosteazaSubiect';
-import Crop from './testing/crop';
+import Cropper from './components/Cropper';
 
 function App() {
   return (
@@ -42,14 +41,12 @@ function AppRoutes() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
 
-        <Route path="/game" element={<UnityGame />} />
-
         <Route  path="/minaAI" element={<MinaAi/>} />
         <Route path="/minaAI/:convId" element={<MinaAi/>} />
 
         <Route path="/subiecte/posteaza" element={<PosteazaSubiect/>}/>
 
-        <Route path="/crop" element={<Crop/>}/>
+        <Route path="/testing/cropper" element={<Cropper />} />
       </Routes>
     </div>
   );
