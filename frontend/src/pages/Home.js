@@ -1,6 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import checkmark from '../assets/blue-checkmark.png'
+import VantaGlobe from '../components/VantaGlobe';
+import LineBG from '../components/LineBG';
 
 const Home = () => {
     const location = useLocation();
@@ -38,6 +40,8 @@ const Home = () => {
                 <p className='text-center scslogin'> Successfully logged in! </p>
             </div>
             }
+            <LineBG/>
+            <VantaGlobe/>
         </div>
     );
 }
