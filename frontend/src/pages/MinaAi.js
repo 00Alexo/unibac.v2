@@ -247,8 +247,8 @@ const MinaAi = () => {
             {error && <Error error={error}/>}
             {convId &&
                 <Tooltip key='default' color='default' content='New Chat' className="capitalize" placement="bottom">
-                    <Button variant="flat" color='primary' style={{zIndex: '3'}} auto bordered
-                    className="custom-toggle absolute right-2 text-2xl rounded-md shadow-sm min-w-3 h-8 px-2 mt-2" 
+                    <Button variant="flat" color='primary' auto bordered
+                    className="custom-toggle absolute right-2 text-2xl rounded-md shadow-sm min-w-3 h-8 px-2 mt-2 z-20" 
                     onClick={() => {navigate('/minaAi'); window.location.reload()}}>
                         <FontAwesomeIcon icon={faPlus} size='md'/>
                     </Button>
@@ -270,7 +270,7 @@ const MinaAi = () => {
             </button>
             }
             {isMenuOpen &&
-            <div className="sidebar-minaAi">
+            <div className="sidebar-minaAi z-20">
                 <div style={{borderBottom:'1px solid white'}}>
                     <h1 style={{
                     background: 'linear-gradient(to right, blue, cyan)',
@@ -341,7 +341,7 @@ const MinaAi = () => {
             </div>
             }
             <div className={prompts.length != 0  ? "chat-minaAi" : "chat-minaAi justify-between"}>
-                <div className={isSmallScreen ? "w-[95%] mx-auto" : "w-[85%] mx-auto"}>
+                <div className={isSmallScreen ? "w-[95%] mx-auto z-20" : "w-[85%] mx-auto z-20"}>
                     {user && prompts.length == 0 ?
                     <p style={{fontSize:'2rem', paddingTop:'30px'}}>
                         Welcome, {user.username.charAt(0).toUpperCase()}{user.username.substring(1, user.username.length)}!
@@ -359,7 +359,7 @@ const MinaAi = () => {
                     }
                     {prompts.length == 0 && (
                                             <div className="flex w-[100%] mx-auto flex-row justify-evenly mt-12 mina-contains-prompt-ideas">
-                                            <div className="prompt-ideas-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                            <div className="z-20 prompt-ideas-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
                                                     <p> What are data structures and why are they important in programming?</p>
                                                 </div>
@@ -372,7 +372,7 @@ const MinaAi = () => {
                                                         setPrompt('');
                                                     }}/>          
                                             </div>
-                                            <div className="prompt-ideas-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                            <div className="z-20 prompt-ideas-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
                                                     <p> Differences between object-oriented programming and functional programming?</p>
                                                 </div>
@@ -386,7 +386,7 @@ const MinaAi = () => {
                                                     }}
                                                 className="pb-3 pr-4 iconitaSend" style={{width:'40px', height:'40px', cursor:'pointer'}}/>
                                             </div>
-                                            <div className="prompt-ideas-mina prompt-hidden-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                            <div className="z-20 prompt-ideas-mina prompt-hidden-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
                                                     <p> What are the most important principles in object-oriented programming?</p>
                                                 </div>
@@ -400,7 +400,7 @@ const MinaAi = () => {
                                                     }}
                                                     className="pb-3 pr-4" style={{width:'40px', height:'40px', cursor:'pointer'}}/>
                                             </div>
-                                            <div className="prompt-ideas-mina prompt-hidden-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                                            <div className="z-20 prompt-ideas-mina prompt-hidden-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
                                                     <p> How can you optimize the performance of a web application?</p>
                                                 </div>
@@ -485,8 +485,8 @@ const MinaAi = () => {
                     ) : <div></div>}
                 </ScrollShadow>
                 </div>
-                <Input value={prompt} onChange={(e) => setPrompt(e.target.value)} type="email" size="lg" variant="underlined" label="Message Mina"
-                className={isSmallScreen ? "w-[95%] mx-auto max-h-[50px]" : "w-[85%] mx-auto max-h-[50px]"}
+                <Input value={prompt} onChange={(e) => setPrompt(e.target.value)} size="lg" variant="underlined" label="Message Mina"
+                className={isSmallScreen ? "w-[95%] mx-auto max-h-[50px] z-20" : "z-20 w-[85%] mx-auto max-h-[50px]"}
                 endContent={
                     <button onClick={() => {
                         getPrompt(); 
