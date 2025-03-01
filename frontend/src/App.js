@@ -8,6 +8,8 @@ import MinaAi from './pages/MinaAi';
 import {useEffect} from 'react';
 import PosteazaSubiect from './pages/PosteazaSubiect';
 import Cropper from './components/Cropper';
+import LineBG from './components/LineBG';
+import MouseFollower from './components/MouseFollower';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function AppRoutes() {
   return (
     <div className="App">
       {!hideNavBar && <NavBar />}
+      <LineBG/>
+      <MouseFollower/>
       <Routes>
         <Route path="*" element={<NotFound />} />
 

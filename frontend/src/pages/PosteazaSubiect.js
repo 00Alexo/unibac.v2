@@ -45,7 +45,7 @@ const PosteazaSubiect = () => {
     return(
         <div>
             {error && <Error error={error}/>}
-            <div className="w-2/3 mt-10 rounded-lg mx-auto border border-zinc-300 p-4 flex flex-col gap-7">
+            <div className="w-2/3 mt-10 rounded-lg mx-auto border border-zinc-300 p-4 flex flex-col gap-7 bg-[#FFFFFF] z-50 relative">
                 <div className="flex flex-col gap-1">
                     <p className="text-3xl text-gray-950 font-bold">Posteaza un subiect</p>
                     <p> Completeaza formularul pentru a posta un subiect nou.</p>

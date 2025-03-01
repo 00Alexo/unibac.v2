@@ -3,6 +3,7 @@ import {useState, useEffect} from 'react';
 import checkmark from '../assets/blue-checkmark.png'
 import VantaGlobe from '../components/VantaGlobe';
 import LineBG from '../components/LineBG';
+import WelcomeHome from '../components/WelcomeHome';
 
 const Home = () => {
     const location = useLocation();
@@ -40,8 +41,8 @@ const Home = () => {
                 <p className='text-center scslogin'> Successfully logged in! </p>
             </div>
             }
-            <LineBG/>
             <VantaGlobe/>
+            <WelcomeHome/>
         </div>
     );
 }

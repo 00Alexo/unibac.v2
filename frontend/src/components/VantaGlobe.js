@@ -30,7 +30,7 @@ const VantaGlobe = () => {
 
     return (
         <div>
-            <div ref={vantaRef} className="w-full h-[calc(100vh-65px)] z-100"></div>
+            <div ref={vantaRef} className="w-full h-[calc(100vh-65px)]"></div>
         </div>
     );
 }
