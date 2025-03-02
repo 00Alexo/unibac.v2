@@ -9,7 +9,7 @@ const ImageCropper = ({ image }) => {
   React.useEffect(() => {
     if (imageRef.current) {
       cropperInstance.current = new Cropper(imageRef.current, {
-        aspectRatio: NaN, // Poți schimba raportul de aspect
+        aspectRatio: NaN,
         viewMode: 1,
         autoCropArea: 0.8,
       });

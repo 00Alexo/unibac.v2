@@ -1,5 +1,5 @@
-import {Input, Button, Select, SelectItem, Autocomplete, AutocompleteItem, Tooltip, Textarea, CircularProgress,
-Checkbox, Spinner} from "@nextui-org/react";
+import {Input, Button, Select, SelectItem, Autocomplete, AutocompleteItem, Tooltip, Textarea, CircularProgress,Modal,ModalContent,
+ModalHeader,ModalBody,ModalFooter, useDisclosure,Checkbox, Spinner} from "@nextui-org/react";
 import {useEffect, useState} from 'react';
 import { useAuthContext } from '../hooks/useAuthContext';
 import {Error, NotificationBox} from '../components/alertBox';
@@ -30,6 +30,7 @@ const PosteazaSubiect = () => {
     const [error, setError] = useState("");
     const [barem, setBarem] = useState("");
     const [loading, setLoading] = useState("");
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
     const nextStep = () =>{
         setLoading(true);
@@ -38,13 +39,49 @@ const PosteazaSubiect = () => {
             setTimeout(()=>{
                 setError(null);
             }, 7000)
+            setLoading(false);
+            return;
         }
         setLoading(false);
+        onOpen();
     }
 
     return(
         <div>
             {error && <Error error={error}/>}
+            {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
+                <ModalContent>
+                {(onClose) => (
+                    <>
+                    <ModalHeader className="flex flex-col gap-1">Selecteaza problemele ({materie})</ModalHeader>
+                    <ModalBody>
+
+                    </ModalBody>
+                    <ModalFooter className="flex justify-between">
+                        <div className="flex gap-2">
+                            <Button color="primary">
+                                Problema anterioara
+                            </Button>
+                            <Button color="primary">
+                                Subiectul anterior
+                            </Button>
+                        </div>
+                        <div className="flex gap-2">
+                            <Button color="danger" variant="light">
+                                Crop
+                            </Button>
+                            <Button color="primary">
+                                Problema urmatoare
+                            </Button>
+                            <Button color="primary">
+                                Subiectul Urmator
+                            </Button>
+                        </div>
+                    </ModalFooter>
+                    </>
+                )}
+                </ModalContent>
+            </Modal> */}
             <div className="w-2/3 mt-10 rounded-lg mx-auto border border-zinc-300 p-4 flex flex-col gap-7 bg-[#FFFFFF] z-50 relative">
                 <div className="flex flex-col gap-1">
                     <p className="text-3xl text-gray-950 font-bold">Posteaza un subiect</p>
@@ -113,13 +150,13 @@ const PosteazaSubiect = () => {
                                 const file = e.target.files[0];
                             
                                 if (file) {
-                                  const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+                                    const validTypes = ["application/pdf"];
                                   
                                   if (validTypes.includes(file.type)) {
                                     setSubiect(file);
                                     console.log("Fișier valid:", file);
                                   } else {
-                                    setError("Doar fișiere PNG, JPG, JPEG și WEBP sunt permise!");
+                                    setError("Doar fișiere PDF sunt permise!");
                                     setTimeout(()=>{
                                         setError(null);
                                     }, 7000)
@@ -130,7 +167,7 @@ const PosteazaSubiect = () => {
                             type="file"
                             name="file-input-subiect"
                             id="file-input-subiect"
-                            accept='image/*' 
+                            accept='.pdf' 
                         />
                         <label 
                            for="file-input-subiect"
@@ -146,13 +183,13 @@ const PosteazaSubiect = () => {
                                 const file = e.target.files[0];
                             
                                 if (file) {
-                                  const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+                                    const validTypes = ["application/pdf"];
                                   
                                   if (validTypes.includes(file.type)) {
                                     setBarem(file);
                                     console.log("Fișier valid:", file);
                                   } else {
-                                    setError("Doar fișiere PNG, JPG, JPEG și WEBP sunt permise!");
+                                    setError("Doar fișiere PDF sunt permise!");
                                     setTimeout(()=>{
                                         setError(null);
                                     }, 7000)
@@ -163,7 +200,7 @@ const PosteazaSubiect = () => {
                             type="file"
                             name="file-input-barem"
                             id="file-input-barem"
-                            accept='image/*' 
+                            accept='.pdf' 
                         />
                         <label 
                            for="file-input-barem"

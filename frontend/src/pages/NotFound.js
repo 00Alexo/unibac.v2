@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function NotFound() {
   return (
-    <main className="min-h-[70vh] flex flex-col items-center justify-center bg-light p-4">
+    <main className="min-h-[70vh] flex flex-col items-center justify-center bg-light p-4 z-30 relative">
       <div className="flex flex-col items-center space-y-4">
         <h1 className="bi bi-link-45deg text-6xl"></h1>
         <h1 className="text-5xl">404</h1>

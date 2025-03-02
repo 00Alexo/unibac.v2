@@ -16,8 +16,9 @@ export default function MouseFollower() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-50 transition-opacity duration-300"
+      className="pointer-events-none fixed inset-0 transition-opacity duration-300"
       style={{
+        zIndex: '1000',
         background: `radial-gradient(300px at ${mousePosition.x}px ${mousePosition.y}px, rgba(14, 44, 197, 0.2), transparent 80%)`,
       }}
     />
