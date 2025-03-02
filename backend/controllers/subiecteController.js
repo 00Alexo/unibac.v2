@@ -4,13 +4,29 @@ const subiecteModel = require('../models/subiecteModel')
 
 const uploadPdf = async (req, res) => {
     try {
-      // Verifică dacă ambele fișiere au fost încărcate
-      if (!req.files || !req.files.subiect || !req.files.barem) {
-        return res.status(400).json({ message: "Ambele fișiere (subiect și barem) trebuie să fie încărcate." });
-      }
+      let errorFields = [];  
+      const username = req.body.username;
+      if(!username)
+        return res.status(400).json({error:"Trebuie sa fii logat ca sa postezi subiecte!"});
+      const {profil, materie, descriere, titlu} = req.body;
+      if (!profil) errorFields.push("profil");
+      if (!materie) errorFields.push("materie");
+      if (!descriere) errorFields.push("descriere");
+      if (!titlu) errorFields.push("titlu");
+      if (!req.files) errorFields.push("fișierele");
+      if (!req.files.subiect) errorFields.push("subiect");
+      if (!req.files.barem) errorFields.push("barem");
+
+    if (errorFields.length > 0) 
+        return res.status(400).json({error: `Următoarele câmpuri sunt obligatorii!`, errorFields });
   
       // Creează un nou document în colecția Subiecte
       const newPdf = new subiecteModel({
+        username,
+        profil,
+        materie,
+        descriere,
+        titlu,
         subiect: {
           data: req.files.subiect[0].buffer, // Fișierul subiect
           contentType: req.files.subiect[0].mimetype,
@@ -25,10 +41,10 @@ const uploadPdf = async (req, res) => {
   
       console.log('Fișierul salvat:', newPdf);
   
-      res.status(200).json({ message: "Fișierele au fost salvate cu succes!" });
+      res.status(200).json({ error: "Fișierele au fost salvate cu succes!" });
     } catch (err) {
       console.error("Eroare la salvarea fișierului:", err);
-      res.status(500).json({ message: "Eroare la salvarea fișierului.", error: err.message }); // Afișează mesajul erorii
+      res.status(500).json({ error:err}); // Afișează mesajul erorii
     }
 };
   

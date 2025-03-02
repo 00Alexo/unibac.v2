@@ -4,11 +4,20 @@ import checkmark from '../assets/blue-checkmark.png'
 import VantaGlobe from '../components/VantaGlobe';
 import LineBG from '../components/LineBG';
 import WelcomeHome from '../components/WelcomeHome';
+import WelcomePage from './WelcomePage';
+import { useAuthContext } from '../hooks/useAuthContext';
 
 const Home = () => {
+    const {user} = useAuthContext();
     const location = useLocation();
     const navigate = useNavigate();
     const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(true); // State pentru a urmări starea de încărcare
+
+    useEffect(() => {
+        setLoading(false);
+    }, [user]);
+
 
     useEffect(() => {
         if (location.state?.fromSignup) {
@@ -20,6 +29,9 @@ const Home = () => {
         }
     }, [location]);
 
+    if (loading) {
+        return null; // Poți adăuga un spinner sau altceva dacă vrei
+    }
     return (
         <div>
             {successfullyLoggedIn &&
@@ -41,8 +53,7 @@ const Home = () => {
                 <p className='text-center scslogin'> Successfully logged in! </p>
             </div>
             }
-            <VantaGlobe/>
-            <WelcomeHome/>
+            {!user && <WelcomePage/>}
         </div>
     );
 }

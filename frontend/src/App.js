@@ -10,6 +10,7 @@ import PosteazaSubiect from './pages/PosteazaSubiect';
 import Cropper from './components/Cropper';
 import LineBG from './components/LineBG';
 import MouseFollower from './components/MouseFollower';
+import WelcomePage from './pages/WelcomePage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function AppRoutes() {
 
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/welcome" element={<WelcomePage />} />
 
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />

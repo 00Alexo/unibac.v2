@@ -1,8 +1,9 @@
-.oSaAibaEroare div div{
-    border-color: rgba(107, 8, 8, 0.999) !important;  
-  }
-  
-  .oSaAibaEroare button{
-    border-color: rgba(107, 8, 8, 0.999) !important;  
-  }
-  
+.oSaAibaEroare .nextui-select-trigger {
+  border: 2px solid rgba(107, 8, 8, 0.999) !important;
+  border-radius: 8px !important;
+}
+
+
+.oSaAibaEroare button{
+  border-color: rgba(107, 8, 8, 0.999) !important;  
+}

@@ -22,6 +22,7 @@ export const profile = [
 ];
 
 const PosteazaSubiect = () => {
+    const {user} = useAuthContext();
     const [profil, setProfil] = useState("");
     const [materie, setMaterie] = useState("");
     const [descriere, setDescriere] = useState("");
@@ -30,58 +31,48 @@ const PosteazaSubiect = () => {
     const [error, setError] = useState("");
     const [barem, setBarem] = useState("");
     const [loading, setLoading] = useState("");
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const [errorFields, setErrorFields] = useState("");
 
-    const nextStep = () =>{
+    const nextStep = async () =>{
         setLoading(true);
-        if(!profil || !materie || !descriere || !titlu || !subiect){
-            setError("Toate campurile sunt obligatorii!");
+        const formData = new FormData();
+    
+        formData.append("username", user.username);
+        formData.append("profil", profil);
+        formData.append("materie", materie);
+        formData.append("descriere", descriere);
+        formData.append("titlu", titlu);
+    
+        formData.append("subiect", subiect); 
+        formData.append("barem", barem);
+    
+        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/uploadPdf`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const json = await response.json();
+
+        if (response.ok) {
+            console.log("Fișierele au fost încărcate cu succes!", json);
+            setLoading(false);
+        }
+        if (!response.ok){
+            console.log(json);
+            setError(json.error);
+            setErrorFields(json.errorFields);
             setTimeout(()=>{
                 setError(null);
             }, 7000)
             setLoading(false);
-            return;
         }
-        setLoading(false);
-        onOpen();
     }
 
+    if(!user)
+        return <NotFound/>;
     return(
         <div>
             {error && <Error error={error}/>}
-            {/* <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="5xl">
-                <ModalContent>
-                {(onClose) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1">Selecteaza problemele ({materie})</ModalHeader>
-                    <ModalBody>
-
-                    </ModalBody>
-                    <ModalFooter className="flex justify-between">
-                        <div className="flex gap-2">
-                            <Button color="primary">
-                                Problema anterioara
-                            </Button>
-                            <Button color="primary">
-                                Subiectul anterior
-                            </Button>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button color="danger" variant="light">
-                                Crop
-                            </Button>
-                            <Button color="primary">
-                                Problema urmatoare
-                            </Button>
-                            <Button color="primary">
-                                Subiectul Urmator
-                            </Button>
-                        </div>
-                    </ModalFooter>
-                    </>
-                )}
-                </ModalContent>
-            </Modal> */}
             <div className="w-2/3 mt-10 rounded-lg mx-auto border border-zinc-300 p-4 flex flex-col gap-7 bg-[#FFFFFF] z-50 relative">
                 <div className="flex flex-col gap-1">
                     <p className="text-3xl text-gray-950 font-bold">Posteaza un subiect</p>
@@ -90,18 +81,27 @@ const PosteazaSubiect = () => {
                 <div className="flex flex-row gap-20">
                     <div className="flex flex-col gap-2 w-[48%]">
                         <p className="font-bold"> Profil </p>
-                        <Select className="w-[100%]" label="Selecteaza profilul"
-                        value={profil}
-                        onChange={(e) => {setProfil(e.target.value); console.log(profil)}}>
+                        <Select
+                            className="w-[100%]"
+                            label="Selectează profilul"
+                            value={profil}
+                            onChange={(e) => setProfil(e.target.value)}
+                            classNames={{
+                                trigger: errorFields.includes("profil") ? "border-errorBorder border-2" : "",
+                            }}
+                            >
                             {profile.map((profil) => (
-                            <SelectItem key={profil.key}
-                            >{profil.label}</SelectItem>
+                                <SelectItem key={profil.key}>{profil.label}</SelectItem>
                             ))}
                         </Select>
+
                     </div>
                     <div className="flex flex-col gap-2 w-[48%]">
                         <p className="font-bold"> Materie </p>
                         <Select className="w-[100%]" label="Selecteaza o materie"
+                        classNames={{
+                            trigger: errorFields.includes("materie") ? "border-errorBorder border-2" : "",
+                        }}
                         value={materie}
                         onChange={(e) => {setMaterie(e.target.value); console.log(materie)}}>
                             {subiecte.map((subiect) => (
@@ -118,7 +118,9 @@ const PosteazaSubiect = () => {
                         className=" bg-gray-100 hover:bg-gray-200 text-black focus:ring-2
                         focus:outline-none rounded-lg"
                         classNames={{
-                            inputWrapper: "bg-gray-100 hover:bg-gray-200 text-black",
+                            inputWrapper: `bg-gray-100 hover:bg-gray-200 text-black ${
+                                errorFields.includes("titlu") ? "border-[2px] border-errorBorder" : ""
+                            }`,
                             input: "resize-y max-h-[40px]",
                         }}
                         isClearable
@@ -134,8 +136,10 @@ const PosteazaSubiect = () => {
                         className="w-[100%] bg-gray-100 hover:bg-gray-200 text-black focus:ring-2
                         focus:outline-none rounded-lg"
                         classNames={{
-                            inputWrapper: "bg-gray-100 hover:bg-gray-200 text-black",
-                            input: "min-h-[100px]",
+                            inputWrapper: `bg-gray-100 hover:bg-gray-200 text-black ${
+                                errorFields.includes("titlu") ? "border-[2px] border-errorBorder" : ""
+                            }`,
+                            input: "resize-y max-h-[40px]",
                         }}
                         isClearable
                         placeholder="O scurta descriere a subiectului..."
@@ -170,9 +174,10 @@ const PosteazaSubiect = () => {
                             accept='.pdf' 
                         />
                         <label 
-                           for="file-input-subiect"
-                            className="cursor-pointer flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-black 
-                            border border-gray-400 rounded-lg px-4 py-2 transition-all duration-300"
+                            for="file-input-subiect" 
+                            className={`cursor-pointer flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-black 
+                            border border-gray-400 rounded-lg px-4 py-2 transition-all duration-300 
+                            ${errorFields.includes("subiect") ? "border-[2px] border-[#C71772]" : ""}`}
                         >
                             <FontAwesomeIcon icon={faCamera} /> <span>Inserează subiectul</span>
                         </label>
@@ -203,9 +208,10 @@ const PosteazaSubiect = () => {
                             accept='.pdf' 
                         />
                         <label 
-                           for="file-input-barem"
-                            className="cursor-pointer flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-black 
-                            border border-gray-400 rounded-lg px-4 py-2 transition-all duration-300"
+                            for="file-input-barem"
+                            className={`cursor-pointer flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-black 
+                            border border-gray-400 rounded-lg px-4 py-2 transition-all duration-300 
+                            ${errorFields.includes("barem") ? "border-[2px] border-[#C71772]" : ""}`}
                         >
                             <FontAwesomeIcon icon={faCamera} /> <span>Inserează baremul</span>
                         </label>
@@ -214,7 +220,7 @@ const PosteazaSubiect = () => {
                     <div>
                         <Button disabled={loading} className="border-black text-black hover:bg-black hover:text-white transition-all duration-300" 
                         variant="bordered" size="lg" onPress={() => nextStep()}>
-                            Pasul urmator {loading && <Spinner/>}
+                            Posteaza {loading && <Spinner/>}
                         </Button>
                     </div>
                 </div>

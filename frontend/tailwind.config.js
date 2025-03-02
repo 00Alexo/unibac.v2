@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       colors: {
         secondary: "#D7D7D7", // Add custom secondary color
+        errorBorder: "#C71772",
       },
       keyframes: {
         slideIn: {
