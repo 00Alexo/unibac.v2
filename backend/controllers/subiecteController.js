@@ -27,6 +27,7 @@ const uploadPdf = async (req, res) => {
         materie,
         descriere,
         titlu,
+        verified: false,
         subiect: {
           data: req.files.subiect[0].buffer, // Fișierul subiect
           contentType: req.files.subiect[0].mimetype,
@@ -34,9 +35,9 @@ const uploadPdf = async (req, res) => {
         barem: {
           data: req.files.barem[0].buffer, // Fișierul barem
           contentType: req.files.barem[0].mimetype,
-        }
+        },
       });
-  
+
       await newPdf.save();
   
       console.log('Fișierul salvat:', newPdf);
@@ -48,7 +49,47 @@ const uploadPdf = async (req, res) => {
     }
 };
   
-  
+const getSubiecte = async(req, res) =>{
+  try{
+      const subiecte = await subiecteModel.find({verified: true}).select('-subiect -barem');;
+      res.status(200).json(subiecte);
+  }catch(err){
+      console.error("Eroare la afișarea subiectelor:", err);
+      res.status(500).json({error:err});
+  }
+}
+
+const getSubiecteUnverified = async(req, res) =>{
+  try{
+      const subiecte = await subiecteModel.find({verified: false}).select('-subiect -barem');
+      res.status(200).json(subiecte);
+  }catch(err){
+      console.error("Eroare la afișarea subiectelor:", err);
+      res.status(500).json({error:err});
+  }
+}
+
+const verifySubiect = async(req, res) =>{
+  try{
+      const id = req.params.id;
+      await subiecteModel.findByIdAndUpdate(id, {verified: true});
+      res.status(200).json({message: "Subiectul a fost verificat cu succes!"});
+  }catch(err){
+      console.error("Eroare la verificarea subiectului:", err);
+      res.status(500).json({error:err});
+  }
+}
+
+const deleteSubiect = async(req, res)=>{
+  try{
+      const id = req.params.id;
+      await subiecteModel.findByIdAndDelete(id);
+      res.status(200).json({message: "Subiectul a fost șters cu succes!"});
+  }catch(err){
+      console.error("Eroare la ștergerea subiectului:", err);
+      res.status(500).json({error:err});
+  }
+}
 
 const downloadSubiect = async (req, res) => {
     const fileId = req.params.id;
@@ -93,4 +134,8 @@ module.exports = {
     uploadPdf,
     downloadSubiect,
     downloadBarem,
+    getSubiecte,
+    getSubiecteUnverified,
+    verifySubiect,
+    deleteSubiect,
 }

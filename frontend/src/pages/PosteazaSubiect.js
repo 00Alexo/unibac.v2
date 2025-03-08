@@ -22,6 +22,7 @@ export const profile = [
 ];
 
 const PosteazaSubiect = () => {
+    const navigate = useNavigate();
     const {user} = useAuthContext();
     const [profil, setProfil] = useState("");
     const [materie, setMaterie] = useState("");
@@ -55,6 +56,7 @@ const PosteazaSubiect = () => {
 
         if (response.ok) {
             console.log("Fișierele au fost încărcate cu succes!", json);
+            navigate('/home', { state: { fromPostareSubiect: true } })
             setLoading(false);
         }
         if (!response.ok){
@@ -176,8 +178,8 @@ const PosteazaSubiect = () => {
                         <label 
                             for="file-input-subiect" 
                             className={`cursor-pointer flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-black 
-                            border border-gray-400 rounded-lg px-4 py-2 transition-all duration-300 
-                            ${errorFields.includes("subiect") ? "border-[2px] border-[#C71772]" : ""}`}
+                            border rounded-lg px-4 py-2 transition-all duration-300 
+                            ${errorFields.includes("subiect") ? "border-[2px] border-[#C71772]" : "border-gray-400"}`}
                         >
                             <FontAwesomeIcon icon={faCamera} /> <span>Inserează subiectul</span>
                         </label>
@@ -210,14 +212,14 @@ const PosteazaSubiect = () => {
                         <label 
                             for="file-input-barem"
                             className={`cursor-pointer flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-black 
-                            border border-gray-400 rounded-lg px-4 py-2 transition-all duration-300 
-                            ${errorFields.includes("barem") ? "border-[2px] border-[#C71772]" : ""}`}
+                            border rounded-lg px-4 py-2 transition-all duration-300 
+                            ${errorFields.includes("barem") ? "border-[2px] border-[#C71772]" : "border-gray-400"}`}
                         >
                             <FontAwesomeIcon icon={faCamera} /> <span>Inserează baremul</span>
                         </label>
                     </div>
 
-                    <div>
+                    <div>   
                         <Button disabled={loading} className="border-black text-black hover:bg-black hover:text-white transition-all duration-300" 
                         variant="bordered" size="lg" onPress={() => nextStep()}>
                             Posteaza {loading && <Spinner/>}

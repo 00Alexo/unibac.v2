@@ -12,7 +12,8 @@ const Home = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
-    const [loading, setLoading] = useState(true); // State pentru a urmări starea de încărcare
+    const [loading, setLoading] = useState(true); 
+    const [mesaj, setMesaj] = useState('');
 
     useEffect(() => {
         setLoading(false);
@@ -23,6 +24,15 @@ const Home = () => {
         if (location.state?.fromSignup) {
             setSuccessfullyLoggedIn(true);
             navigate('.', { state: { fromSignup: false }, replace: true });
+            setMesaj('Successfully logged in!');
+            setTimeout(() =>{
+                setSuccessfullyLoggedIn(false);
+            }, 5000)
+        }
+        if (location.state?.fromPostareSubiect) {
+            setSuccessfullyLoggedIn(true);
+            navigate('.', { state: { fromPostareSubiect: false }, replace: true });
+            setMesaj('Subiectul a fost postat cu succes!');
             setTimeout(() =>{
                 setSuccessfullyLoggedIn(false);
             }, 5000)
@@ -30,7 +40,7 @@ const Home = () => {
     }, [location]);
 
     if (loading) {
-        return null; // Poți adăuga un spinner sau altceva dacă vrei
+        return null; 
     }
     return (
         <div>
@@ -50,7 +60,7 @@ const Home = () => {
                     <div class="dot dot--tl"></div>
                     </div>
                 </div>
-                <p className='text-center scslogin'> Successfully logged in! </p>
+                <p className='text-center scslogin'> {mesaj} </p>
             </div>
             }
             {!user && <WelcomePage/>}

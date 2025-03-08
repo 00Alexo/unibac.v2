@@ -21,6 +21,11 @@ const SubiecteSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  verified:{
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   subiect: {
     data: Buffer,
     contentType: String

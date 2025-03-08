@@ -11,6 +11,7 @@ import Cropper from './components/Cropper';
 import LineBG from './components/LineBG';
 import MouseFollower from './components/MouseFollower';
 import WelcomePage from './pages/WelcomePage';
+import Subiecte from './pages/Subiecte';
 
 function App() {
   return (
@@ -33,7 +34,7 @@ function AppRoutes() {
   }, [location]);
 
   return (
-    <div className="App">
+    <div className="App relative min-h-screen">
       {!hideNavBar && <NavBar />}
       <LineBG/>
       <MouseFollower/>
@@ -51,6 +52,7 @@ function AppRoutes() {
         <Route path="/minaAI/:convId" element={<MinaAi/>} />
 
         <Route path="/subiecte/posteaza" element={<PosteazaSubiect/>}/>
+        <Route path="/subiecte" element={<Subiecte/>}/>
 
         <Route path="/testing/cropper" element={<Cropper />} />
       </Routes>
