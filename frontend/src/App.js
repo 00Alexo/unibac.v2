@@ -12,6 +12,7 @@ import LineBG from './components/LineBG';
 import MouseFollower from './components/MouseFollower';
 import WelcomePage from './pages/WelcomePage';
 import Subiecte from './pages/Subiecte';
+import ViewSubiect from './pages/ViewSubiect';
 
 function App() {
   return (
@@ -52,7 +53,8 @@ function AppRoutes() {
         <Route path="/minaAI/:convId" element={<MinaAi/>} />
 
         <Route path="/subiecte/posteaza" element={<PosteazaSubiect/>}/>
-        <Route path="/subiecte" element={<Subiecte/>}/>
+        <Route path="/subiecte/:materie" element={<Subiecte/>}/>
+        <Route path="/subiecte/:materie/:subiectId" element={<ViewSubiect/>}/>
 
         <Route path="/testing/cropper" element={<Cropper />} />
       </Routes>

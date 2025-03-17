@@ -20,7 +20,6 @@ const uploadPdf = async (req, res) => {
     if (errorFields.length > 0) 
         return res.status(400).json({error: `Următoarele câmpuri sunt obligatorii!`, errorFields });
   
-      // Creează un nou document în colecția Subiecte
       const newPdf = new subiecteModel({
         username,
         profil,
@@ -45,13 +44,26 @@ const uploadPdf = async (req, res) => {
       res.status(200).json({ error: "Fișierele au fost salvate cu succes!" });
     } catch (err) {
       console.error("Eroare la salvarea fișierului:", err);
-      res.status(500).json({ error:err}); // Afișează mesajul erorii
+      res.status(500).json({ error:err});
     }
 };
+
+const getSubiect = async(req, res)=>{
+  try{
+    const {id} = req.params;
+    const subiect = await subiecteModel.findById(id).select('-subiect -barem');
+    res.status(200).json(subiect);
+  }catch(err){
+    console.error("Eroare la afișarea subiectului:", err);
+    res.status(500).json({error:err});
+  }
+}
   
 const getSubiecte = async(req, res) =>{
   try{
-      const subiecte = await subiecteModel.find({verified: true}).select('-subiect -barem');;
+      const {materie} = req.query;
+      console.log(materie);
+      const subiecte = await subiecteModel.find({verified: true, materie}).select('-subiect -barem');;
       res.status(200).json(subiecte);
   }catch(err){
       console.error("Eroare la afișarea subiectelor:", err);
@@ -138,4 +150,5 @@ module.exports = {
     getSubiecteUnverified,
     verifySubiect,
     deleteSubiect,
+    getSubiect
 }
