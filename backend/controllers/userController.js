@@ -68,7 +68,22 @@ const signup = async(req, res) =>{
             password: hashedPassword,
             statut,
             adminPerms: false,
-            prompts: []
+            prompts: [],
+            avatar: '',
+            badges: [{name: 'Veteran', description: 'Utilizator inregistrat de peste 1 an',
+            icon: `<svg class="badge" xmlns="http://www.w3.org/2000/svg" height="80" width="80" viewBox="20 -40 440 440">
+            <circle class="outer" fill="#F9D535" stroke="#fff" stroke-width="8" stroke-linecap="round" cx="180" cy="180" r="157"/>
+            <circle class="inner" fill="#DFB828" stroke="#fff" stroke-width="8" cx="180" cy="180" r="108.3"/>
+            <path class="inline" d="M89.4 276.7c-26-24.2-42.2-58.8-42.2-97.1 0-22.6 5.6-43.8 15.5-62.4m234.7.1c9.9 18.6 15.4 39.7 15.4 62.2 0 38.3-16.2 72.8-42.1 97" stroke="#CAA61F" stroke-width="7" stroke-linecap="round" fill="none"/>
+                <g class="star">
+                    <path fill="#F9D535" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M180 107.8l16.9 52.1h54.8l-44.3 32.2 16.9 52.1-44.3-32.2-44.3 32.2 16.9-52.1-44.3-32.2h54.8z"/>
+                    <circle fill="#DFB828" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="180" cy="107.8" r="4.4"/>
+                    <circle fill="#DFB828" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="223.7" cy="244.2" r="4.4"/>
+                    <circle fill="#DFB828" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="135.5" cy="244.2" r="4.4"/>
+                    <circle fill="#DFB828" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="108.3" cy="160.4" r="4.4"/>
+                    <circle fill="#DFB828" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="251.7" cy="160.4" r="4.4"/>
+                </g>	
+            </svg>`}],
         }
         const user = await userModel.create(data);
         const token = createToken(user._id);
@@ -140,8 +155,67 @@ const getUserProfile = async (req, res) =>{
     }
 }
 
+const updateUserAvatar = async(req, res) =>{
+    try{
+        const {username, avatar} = req.body;
+        const activitate = {
+            type: 'newAvatar',
+            msg: 'si-a modificat poza de profil',
+            currentAvatar: avatar,
+            timestamp: new Date().toLocaleString('ro-RO', { hour12: false })
+        }
+        const user = await userModel.findOneAndUpdate({username: username.toLowerCase()}, 
+        {$set:{avatar: avatar}, $addToSet: {activitate: activitate}}, {new: true}).select('avatar');
+    
+        res.status(200).json(user);
+    }catch(error){
+        console.error(error.message);
+        res.status(400).json(error.message);
+    }
+}
+
+const search = async(req, res) =>{
+    try{
+        const {search, page = 1, limit = 9} = req.query;
+        const limitNum = parseInt(limit);
+        const skip = (parseInt(page) - 1) * limitNum;
+        const users = await userModel.find({username: {$regex: search, $options: 'i'}}).select
+        ('username displayName avatar followers following statut').skip(skip).limit(limitNum);
+
+        const totalUsers = await userModel.countDocuments({username: {$regex: search, $options: 'i'}});
+        
+        res.status(200).json({users, totalUsers});
+
+    }catch(error){
+        console.error(error.message);
+        res.status(400).json(error.message);
+    }
+}
+
+const statusVerifier = async(req, res) =>{
+    try{
+        const {username} = req.query;
+
+        if(!username)
+            return res.status(400).json({error: 'Invalid username'});
+
+        const user = await userModel.findOne({username: username.toLowerCase()}).select('statut');
+
+        if(!user)
+            return res.status(400).json({error:'Utilizator invalid!'});
+
+        res.status(200).json({user});
+    }catch(error){
+        console.error(error.message);
+        res.status(400).json(error.message);
+    }
+}
+
 module.exports={
     signup,
     signin,
-    getUserProfile
+    getUserProfile,
+    updateUserAvatar,
+    search,
+    statusVerifier
 }

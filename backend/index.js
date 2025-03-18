@@ -6,6 +6,7 @@ const app = express();
 const userRoutes = require('./routes/userRoutes');
 const minaAiRoutes = require('./routes/minaAiRoutes');
 const subiecteRoutes = require('./routes/subiecteRoutes');
+const classRoutes = require('./routes/classRoutes');
 
 const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
 
@@ -31,6 +32,7 @@ app.use((req, res, next) =>{
 app.use('/api/user', userRoutes)
 app.use('/api/minaAi', minaAiRoutes);
 app.use('/api/subiecte', subiecteRoutes);
+app.use('/api/class', classRoutes);
 
  mongoose.connect(process.env.mongoDB)
  .then(() => {

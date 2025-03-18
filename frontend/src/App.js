@@ -13,6 +13,10 @@ import MouseFollower from './components/MouseFollower';
 import WelcomePage from './pages/WelcomePage';
 import Subiecte from './pages/Subiecte';
 import ViewSubiect from './pages/ViewSubiect';
+import ViewProfile from './pages/ViewProfile';
+import Search from './pages/Search';
+import CreateClass from './pages/CreateClass';
+import ViewClass from './pages/ViewClass';
 
 function App() {
   return (
@@ -55,6 +59,14 @@ function AppRoutes() {
         <Route path="/subiecte/posteaza" element={<PosteazaSubiect/>}/>
         <Route path="/subiecte/:materie" element={<Subiecte/>}/>
         <Route path="/subiecte/:materie/:subiectId" element={<ViewSubiect/>}/>
+
+        <Route path="/profile/:username" element={<ViewProfile/>}/>
+        <Route path="/profile/:username/:view" element={<ViewProfile/>}/>
+
+        <Route path="/search/:search"element={<Search/>}/>
+
+        <Route path="/clase/createClass" element={<CreateClass/>} />
+        <Route path="/clase/:classId" element={<ViewClass/>}/>
 
         <Route path="/testing/cropper" element={<Cropper />} />
       </Routes>

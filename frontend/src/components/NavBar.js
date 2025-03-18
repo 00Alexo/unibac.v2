@@ -270,7 +270,7 @@ const NavBar = () => {
                 </DropdownSection>
 
                 <DropdownSection showDivider title="Clase"> 
-                  <DropdownItem onClick={() => {navigate('/creazaClasa')}}
+                  <DropdownItem onClick={() => {navigate('/clase/createClass')}}
                     key="Subiect"
                   >
                     Creeaza o clasa
@@ -326,7 +326,7 @@ const NavBar = () => {
                 name = {user.username.charAt(0).toUpperCase()}
                 as="button"
                 className="transition-transform"
-                src={' '}
+                src={userData?.avatar}
               />
             </DropdownTrigger>
             <DropdownMenu aria-label="Profile Actions" variant="flat">

@@ -91,7 +91,7 @@ const SignUp = () => {
     if(user)
         return <NotFound/>
     return (
-        <div className="mx-auto mt-[10vh] sm:mt-[12vh] md:mt-[15vh] z-50 relative border-2 border-secondary rounded-xl p-6 max-w-[95vw] w-[400px] animate-slideIn">
+        <div className="mx-auto mt-[10vh] sm:mt-[12vh] md:mt-[15vh] z-50 relative border-2 bg-white border-secondary rounded-xl p-6 max-w-[95vw] w-[400px] animate-slideIn">
             <form>
                 <div className="flex flex-col gap-4">
                     <div className="flex w-full flex-wrap md:flex-nowrap md:mb-0">

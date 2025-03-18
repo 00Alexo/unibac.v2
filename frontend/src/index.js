@@ -6,6 +6,7 @@ import './css/minaAi.css';
 import './css/others.css'
 import './css/cropper.css'
 import './css/cropper.min.css'
+import './css/signInUp.css'
 import { NextUIProvider } from '@nextui-org/react';
 import App from './App';
 import {AuthContextProvider} from './context/AuthContext'
