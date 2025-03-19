@@ -93,7 +93,7 @@ const CreateClass = () => {
                     <p className="create-class-text text-center mt-5">CREATE CLASS</p>
                     <div className="contains-class-inputs mt-20 w-full mx-auto">
                         <div className='bg-white flex w-full flex-wrap md:flex-nowrap md:mb-0 gap-4'>
-                            <Input required isClearable type="email" variant="bordered"
+                            <Input required isClearable variant="bordered"
                             label="Numele clasei" size='lg' isInvalid={errorFields?.includes("className")}
                             onChange={(e) => {setClassName(e.target.value)}}
                             value={className}

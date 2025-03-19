@@ -515,6 +515,16 @@ const getUserClasses = async(req, res) =>{
     }
 }
 
+const getPublicClasses = async(req, res) =>{
+    try{
+        const publicClasses = await classModel.find({ status: 'public' });
+        res.status(200).json(publicClasses);
+    }catch(error){
+        console.error(error.message);
+        res.status(400).json(error.message);
+    }
+}
+
 //* TESTE
 
 const createTest = async (req, res) =>{
@@ -653,5 +663,6 @@ module.exports={
     createTest,
     getTestData,
     submitTest,
-    getUserClasses
+    getUserClasses,
+    getPublicClasses
 }

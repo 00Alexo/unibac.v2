@@ -17,6 +17,7 @@ import ViewProfile from './pages/ViewProfile';
 import Search from './pages/Search';
 import CreateClass from './pages/CreateClass';
 import ViewClass from './pages/ViewClass';
+import ClaseList from './pages/ClaseList';
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function AppRoutes() {
 
         <Route path="/clase/createClass" element={<CreateClass/>} />
         <Route path="/clase/:classId" element={<ViewClass/>}/>
+        <Route path="/clase" element={<ClaseList/>}/>
 
         <Route path="/testing/cropper" element={<Cropper />} />
       </Routes>

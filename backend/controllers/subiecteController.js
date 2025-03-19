@@ -1,5 +1,10 @@
 const userModel = require('../models/userModel')
 const subiecteModel = require('../models/subiecteModel')
+const pdfParse = require('pdf-parse');
+const OpenAI = require('openai');
+const client = new OpenAI({
+  apiKey: process.env.OPEN_AI_KEY
+});
 
 
 const uploadPdf = async (req, res) => {
@@ -141,6 +146,138 @@ const downloadBarem = async (req, res) => {
     }
 }
 
+getRezolvariSubiect = async(req, res)=>{
+  try{
+    const {id, username} = req.params;
+
+    console.log(id, username);
+        
+    const user = await userModel.findOne({username});
+
+    if(!user)
+      return res.status(404).json({error: "Trebuie sa fii logat!"});
+
+    const subiect = user.subiecte.find(s => s._id.toString() === id);
+    
+    res.status(200).json(subiect.rezolvari);
+  }catch(err){
+    console.error("Eroare la afișarea rezolvarilor subiectului:", err);
+    res.status(500).json({error:err});
+  }
+}
+
+const addToSubiect = async (req, res) => {
+  try{
+    const {id, rezolvari, username} = req.body;
+    
+    const user = await userModel.findOne({username});
+
+    if(!user)
+      return res.status(404).json({error: "Trebuie sa fii logat!"});
+
+    const subiectIndex = user.subiecte.findIndex(s => s._id.toString() === id);
+
+    if (subiectIndex !== -1) {
+      await userModel.updateOne(
+        { username, "subiecte._id": id },
+        { $push: { "subiecte.$.rezolvari": { $each: rezolvari } } }
+      );
+    } else {
+      await userModel.updateOne(
+        { username },
+        { 
+          $push: {
+            subiecte: {
+              _id: id,
+              rezolvari: rezolvari,
+              createdAt: new Date()
+            }
+          }
+        }
+      );
+    }
+
+    const updatedUser = await userModel.findOne({username});
+    const subiectActualizat = updatedUser.subiecte.find(s => s._id.toString() === id);
+    
+    res.status(200).json({
+      subiect: subiectActualizat
+    });
+  }catch(err){
+    console.error("Eroare la rezolvarea subiectului:", err);
+    res.status(500).json({error:err});
+  }
+}
+
+const analyzeSubjectContent = async (pdfBuffer) => {
+  try {
+    // Extrage textul din PDF
+    const data = await pdfParse(pdfBuffer);
+    const pdfText = data.text;
+
+    // Trimite cererea către GPT-4o pentru analiză
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "Ești un expert în analiza documentelor educaționale. Analizează în detaliu conținutul acestui subiect."
+        },
+        {
+          role: "user",
+          content: `Text extras din document:\n\n${pdfText}\n\nTe rog să faci următoarele:
+            1. spune mi primele 2 exercitii
+            2. spune mi ultimul exercitiu`
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 1000
+    });
+
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error("Eroare în analiza conținutului:", error);
+    throw new Error("Nu am putut analiza subiectul");
+  }
+};
+
+const gradeSubiect = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const subiect = await subiecteModel.findById(id);
+    
+    if (!subiect) {
+      return res.status(404).json({ error: "Subiectul nu a fost găsit!" });
+    }
+
+    const pdfBuffer = subiect.subiect.data;
+    if (!pdfBuffer || !(pdfBuffer instanceof Buffer)) {
+      return res.status(400).json({ error: "PDF invalid" });
+    }
+
+    const analiza = await analyzeSubjectContent(pdfBuffer);
+    
+    res.status(200).json({
+      success: true,
+      analiza: analiza.split('\n').filter(line => line.trim()), // Formatează răspunsul
+      metadata: {
+        materie: subiect.materie,
+        profil: subiect.profil,
+        dificultate: "Medie" // Poți adăuga logica de determinare a dificultății
+      }
+    });
+    
+  } catch (err) {
+    console.error("Eroare:", err);
+    res.status(500).json({ 
+      error: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+  }
+};
+
+
+
 
 module.exports = {
     uploadPdf,
@@ -150,5 +287,8 @@ module.exports = {
     getSubiecteUnverified,
     verifySubiect,
     deleteSubiect,
-    getSubiect
+    getSubiect,
+    gradeSubiect,
+    addToSubiect,
+    getRezolvariSubiect
 }

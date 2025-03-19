@@ -14,7 +14,7 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
-
+import { useAuthContext } from '../hooks/useAuthContext';
 
 export const AddNoteIcon = (props) => {
     return (
@@ -98,8 +98,88 @@ export const AddNoteIcon = (props) => {
 const ViewSubiect = () => {
     const {subiectId, materie} = useParams();
     const navigate = useNavigate();
+    const {user} = useAuthContext();
+    const [loading, setIsLoading] = useState(false);
+
     const [images, setImages] = useState([]);
     const [canvasImages, setCanvasImages] = useState([]);
+    const [text, setText] = useState('');
+    const [texts, setTexts] = useState([]);
+
+    const addToSubiect = async(type, rezolvare)=>{
+        const rezolvari =[{type: type, rezolvare: rezolvare}];
+        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/addToSubiect`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: JSON.stringify({
+                rezolvari,
+                username:user.username,
+                id: subiectId
+            })
+        });
+        const json = await response.json();
+        if(!response.ok){
+            console.log(json.error);
+        }
+        if(response.ok){
+            console.log(json);
+       }
+    }
+
+    useEffect(() => {
+        const fetchAndOrganizeRezolvari = async () => {
+          try {
+            const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/getRezolvariSubiect/${subiectId}/${user?.username}`,{
+                method: 'GET',
+            });
+            
+            if (!response.ok) {
+              throw new Error('Eroare la încărcarea rezolvărilor');
+            }
+            
+            const json = await response.json();
+            
+            console.log(json);
+
+            let canvasTemp = [];
+            let imageTemp = [];
+            let textsTemp = [];
+            
+            json.forEach(item => {
+              switch(item.type) {
+                case 'canvas':
+                  canvasTemp.push(item.rezolvare);
+                  break;
+                case 'image':
+                  imageTemp.push(item.rezolvare);
+                  break;
+                case 'text':
+                  textsTemp.push(item.rezolvare);
+                  break;
+                default:
+                  console.warn('Tip rezolvare necunoscut:', item.type);
+              }
+            });
+
+            console.log("canvastemp",canvasTemp);
+
+            setCanvasImages(canvasTemp);
+            setImages(imageTemp);
+            setTexts(textsTemp);
+            
+          } catch (error) {
+            console.error('Eroare procesare rezolvari:', error);
+          }
+        };
+      
+        if (subiectId && user?.username) {
+          fetchAndOrganizeRezolvari();
+        }
+    }, [subiectId, user?.username])
+
     const [materii, setMaterii] = useState(['informatica', 'matematica', 'logica', 'economie']);
     const { viewSubiect, subiect , error, isLoading, refetchSubiect} = useGetSubiect(subiectId);
     const timp = (createdAt) => {
@@ -113,6 +193,7 @@ const ViewSubiect = () => {
     const handleSave = async () => {
         if (canvasRef.current) {
             const exportImage = await canvasRef.current.exportImage('png');
+            addToSubiect('canvas', exportImage);
             setCanvasImages((prev) => [...prev, exportImage]);
         }
     };
@@ -129,6 +210,7 @@ const ViewSubiect = () => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => {
+                addToSubiect('image', reader.result);
                 setImages((prevImages) => [...prevImages, reader.result]);
             };
         }
@@ -141,10 +223,9 @@ const ViewSubiect = () => {
         input.click();
     };
     const [isConfirmOpenTextBox, setIsConfirmOpenTextBox] = useState(false);
-    const [text, setText] = useState('');
-    const [texts, setTexts] = useState([]);
     const handleSaveText = () => {
         setTexts((prevTexts) => [...prevTexts, text]);
+        addToSubiect('text', text);
         setText('');
         setIsConfirmOpenTextBox(false);
     }

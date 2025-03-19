@@ -35,7 +35,7 @@ const ClassSchema = new mongoose.Schema({
     },
     avatar:{
         type: String,
-        required: true
+        required: false
     },
     students:{
         type: Array,

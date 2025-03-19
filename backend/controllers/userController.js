@@ -84,6 +84,9 @@ const signup = async(req, res) =>{
                     <circle fill="#DFB828" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" cx="251.7" cy="160.4" r="4.4"/>
                 </g>	
             </svg>`}],
+            activitate: [{type: 'welcome!', msg: `s-a inregistrat pe platforma!`, timestamp: timestamp, currentAvatar: ''}],
+            clase:[],
+            subiecte:[],
         }
         const user = await userModel.create(data);
         const token = createToken(user._id);

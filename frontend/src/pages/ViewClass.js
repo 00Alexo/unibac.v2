@@ -124,7 +124,6 @@ const ViewClass = () => {
             {classData && !error &&(
                 <>
                     <p>{classData.creator}</p>
-                    
                 </>
             )}
             {error === 'Clasa privata' && 

@@ -35,6 +35,18 @@ const UserSchema = new mongoose.Schema({
     prompts:{
         type: Array,
         required: true,
+    },
+    activitate:{
+        type: Array,
+        required: true
+    },
+    clase:{
+        type: Array,
+        required: true
+    },
+    subiecte:{
+        type: Array,
+        required: true
     }
   }, {timestamps: true});
   
