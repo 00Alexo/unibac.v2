@@ -190,6 +190,7 @@ const addToSubiect = async (req, res) => {
             subiecte: {
               _id: id,
               rezolvari: rezolvari,
+              punctaj: [],
               createdAt: new Date()
             }
           }
@@ -209,64 +210,133 @@ const addToSubiect = async (req, res) => {
   }
 }
 
-const analyzeSubjectContent = async (pdfBuffer) => {
+const calculeazaPunctaj = async (jsonString) =>{
   try {
-    // Extrage textul din PDF
-    const data = await pdfParse(pdfBuffer);
-    const pdfText = data.text;
+    const rezultat = JSON.parse(jsonString);
+    let total = 0;
 
-    // Trimite cererea către GPT-4o pentru analiză
-    const response = await client.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "Ești un expert în analiza documentelor educaționale. Analizează în detaliu conținutul acestui subiect."
-        },
-        {
-          role: "user",
-          content: `Text extras din document:\n\n${pdfText}\n\nTe rog să faci următoarele:
-            1. spune mi primele 2 exercitii
-            2. spune mi ultimul exercitiu`
-        }
-      ],
-      temperature: 0.3,
-      max_tokens: 1000
+    if (!rezultat.exercitii || typeof rezultat.exercitii !== 'object') {
+      throw new Error('Format invalid - lipsesc exercițiile');
+    }
+
+    Object.values(rezultat.exercitii).forEach(punctaj => {
+      const puncte = parseFloat(punctaj.toString().replace('p', ''));
+      
+      if (!isNaN(puncte)) {
+        total += puncte;
+      } else {
+        console.warn(`Valoare invalidă ignorată: ${punctaj}`);
+      }
     });
 
-    return response.choices[0].message.content;
-  } catch (error) {
-    console.error("Eroare în analiza conținutului:", error);
-    throw new Error("Nu am putut analiza subiectul");
+    return total;
+  } catch (err) {
+    console.error('Eroare la calculul punctajului:', err);
+    return 0; 
   }
-};
+}
 
 const gradeSubiect = async (req, res) => {
   try {
-    const { id } = req.body;
+    const { id, username } = req.body;
     const subiect = await subiecteModel.findById(id);
     
+    if(!username)
+      return res.status(400).json({error: "Trebuie sa fii logat!"});
+
     if (!subiect) {
       return res.status(404).json({ error: "Subiectul nu a fost găsit!" });
     }
 
-    const pdfBuffer = subiect.subiect.data;
-    if (!pdfBuffer || !(pdfBuffer instanceof Buffer)) {
-      return res.status(400).json({ error: "PDF invalid" });
-    }
+    // const pdfBuffer = subiect.subiect.data;
+    // if (!pdfBuffer || !(pdfBuffer instanceof Buffer)) {
+    //   return res.status(400).json({ error: "PDF invalid" });
+    // }
 
-    const analiza = await analyzeSubjectContent(pdfBuffer);
+    const user = await userModel.findOne({username});
+
+    const subiecte = user.subiecte.find(s => s._id.toString() === id);
+
+    let prompts = [];
+    // const data = await pdfParse(subiect.subiect.data);
+    // const pdfText = data.text;
+    const Subiect = await pdfParse(subiect.subiect.data);
+    const SubiectText = Subiect.text;
+    const Barem = await pdfParse(subiect.barem.data);
+    const BaremText = Barem.text;
     
-    res.status(200).json({
-      success: true,
-      analiza: analiza.split('\n').filter(line => line.trim()), // Formatează răspunsul
-      metadata: {
-        materie: subiect.materie,
-        profil: subiect.profil,
-        dificultate: "Medie" // Poți adăuga logica de determinare a dificultății
-      }
+    prompts.push({
+      role: "system",
+      content: `ACT AS A MATH TEACHER. ANALYZE THESE ANSWERS STEP-BY-STEP:
+                1. Compare each answer (text/image) with the grading rubric
+                2. Calculate points for each exercise
+                3. Return ONLY JSON format: {"exercitii": {"1": "xp", "2": "xp", ...}}
+                DO NOT include explanations.`
+    });
+
+    prompts.push({
+      role: "system",
+      content: `[SUBJECT TEXT]\n${SubiectText}\n\n[GRADING RUBRIC]\n${BaremText}`
     });
     
+    subiecte.rezolvari.forEach(rez => {
+      if (rez.type === 'text') {
+        prompts.push({
+          role: "user",
+          content: [
+            { 
+              type: "text",
+              text: rez.rezolvare
+            }
+          ]
+        });
+      } else if (rez.type === 'image' || rez.type === 'canvas') {
+        // 1. Extrage tipul MIME corect
+        const mimeType = rez.type === 'image' ? 'jpeg' : 'png';
+        
+        // 2. Verifică dacă rezolvare este deja în format base64
+        let base64Data;
+        if (rez.rezolvare.startsWith('data:')) {
+          // Dacă e deja data URL, extrage doar partea de base64
+          base64Data = rez.rezolvare.split(',')[1];
+        } else {
+          // Dacă e Buffer, convertește la base64
+          base64Data = Buffer.from(rez.rezolvare).toString('base64');
+        }
+    
+        // 3. Construiește URL-ul corect
+        prompts.push({
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/${mimeType};base64,${base64Data}`
+              }
+            }
+          ]
+        });
+      }
+    });
+
+    const response = await client.chat.completions.create({
+      model: "gpt-4o",
+      messages: prompts,
+      temperature: 0.1,
+      response_format: { type: "json_object" } 
+    })
+
+    const punctaj = await calculeazaPunctaj(response.choices[0].message.content) + 10;
+
+    console.log(response.choices[0].message.content, punctaj);
+
+    await userModel.updateOne(
+      { username, "subiecte._id": id },
+      { $push: { "subiecte.$.punctaj": { punctaj, createdAt: new Date() } } }
+    );
+
+    res.status(200).json({punctaj});
+
   } catch (err) {
     console.error("Eroare:", err);
     res.status(500).json({ 
@@ -276,7 +346,24 @@ const gradeSubiect = async (req, res) => {
   }
 };
 
+const getPunctaje = async(req, res) =>{
+  try{
+    const{id, username} = req.params;
+    if(!username)
+      return res.status(400).json({error: "Trebuie sa fii logat!"});
+    if(!id)
+      return res.status(400).json({error: "Id-ul subiectului este invalid!"});
 
+    const user = await userModel.findOne({username});
+
+    const subiecte = user.subiecte.find(s => s._id.toString() === id);
+
+    res.status(200).json(subiecte.punctaj);
+  }catch(err){
+    console.error("Eroare la afișarea punctajelor:", err);
+    res.status(500).json({error:err});
+  }
+}
 
 
 module.exports = {
@@ -290,5 +377,6 @@ module.exports = {
     getSubiect,
     gradeSubiect,
     addToSubiect,
-    getRezolvariSubiect
+    getRezolvariSubiect,
+    getPunctaje
 }

@@ -1,7 +1,8 @@
-"use client";
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 
 export default function WelcomeHome() {
+  const navigate = useNavigate();
   return (
     <div className="flex items-center h-screen absolute inset-0 z-10 px-6 mr-5">
       <div className="w-full max-w-6xl mx-auto">
@@ -46,6 +47,7 @@ export default function WelcomeHome() {
             className="flex flex-wrap gap-4"
           >
             <motion.button
+              onClick={() => navigate("/signUp")}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-800 transition-all"

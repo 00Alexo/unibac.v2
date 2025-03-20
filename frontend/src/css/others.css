@@ -321,3 +321,27 @@
 	.star circle:nth-of-type(5) {
 		animation-delay: 1.9s;
 	}
+
+
+
+
+	
+/*stelute*/
+
+.constellation-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #000428, #004e92);
+    overflow: hidden;
+    cursor: none;
+    touch-action: none; /* Disable default touch scroll behavior */
+  }
+  
+  .star {
+    position: absolute;
+    font-size: 2rem;
+    pointer-events: none;
+    transition: transform 0.1s ease-out; /* Smooth transition for movement */
+  }
+  

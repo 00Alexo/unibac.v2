@@ -7,7 +7,8 @@ import { ro } from "date-fns/locale";
 import { useGetSubiect } from '../hooks/useGetSubiect';
 import { faClock, faLock} from '@fortawesome/free-solid-svg-icons';
 import { Card, CardBody, CardHeader, CardFooter, Divider, Link, Image, Button, Modal,ModalContent,ModalHeader,ModalBody, Input,
-Listbox, ListboxItem, cn,ModalFooter, useDisclosure,useDraggable } from '@nextui-org/react';
+Listbox, ListboxItem, cn,ModalFooter, useDisclosure,useDraggable, 
+ScrollShadow} from '@nextui-org/react';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
@@ -15,6 +16,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faImage } from '@fortawesome/free-solid-svg-icons';
 import { useAuthContext } from '../hooks/useAuthContext';
+import { format } from 'date-fns';
 
 export const AddNoteIcon = (props) => {
     return (
@@ -100,11 +102,32 @@ const ViewSubiect = () => {
     const navigate = useNavigate();
     const {user} = useAuthContext();
     const [loading, setIsLoading] = useState(false);
+    const [grading, setGrading] = useState(false)
+    const [grade, setGrade] = useState(null);
 
     const [images, setImages] = useState([]);
     const [canvasImages, setCanvasImages] = useState([]);
     const [text, setText] = useState('');
     const [texts, setTexts] = useState([]);
+
+    const [punctaje, setPunctaje] = useState([]);
+
+    const getPunctaje = async()=>{
+        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/getPunctaje/${subiectId}/${user.username}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        const json = await response.json();
+        if(!response.ok){
+            console.log(json.error);
+        }
+        if(response.ok){
+            console.log(json);
+            setPunctaje(json);
+        }
+    }
 
     const addToSubiect = async(type, rezolvare)=>{
         const rezolvari =[{type: type, rezolvare: rezolvare}];
@@ -164,7 +187,6 @@ const ViewSubiect = () => {
               }
             });
 
-            console.log("canvastemp",canvasTemp);
 
             setCanvasImages(canvasTemp);
             setImages(imageTemp);
@@ -177,6 +199,7 @@ const ViewSubiect = () => {
       
         if (subiectId && user?.username) {
           fetchAndOrganizeRezolvari();
+          getPunctaje();
         }
     }, [subiectId, user?.username])
 
@@ -198,6 +221,7 @@ const ViewSubiect = () => {
         }
     };
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const [isPunctajeOpen, setIsPunctajeOpen] = useState(false);
     const handleClearCanvas = () => {
         if (canvasRef.current) {
             canvasRef.current.clearCanvas();
@@ -232,12 +256,61 @@ const ViewSubiect = () => {
     const storageBoxStyle = "flex flex-col items-center p-4 bg-default-100 rounded-xl gap-2 hover:bg-default-200 transition-colors cursor-pointer";
     const solutionItemStyle = "flex justify-between items-center p-1.5 bg-default-200 rounded-md hover:bg-default-100 transition-colors text-sm";
 
+    const handleCorectareSubiect = async () => {
+        setGrading(true);
+        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/gradeSubiect`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username:user.username,
+                id: subiectId
+            })
+        });
+        const json = await response.json();
+        if(!response.ok){
+            console.log(json.error);
+        }
+        if(response.ok){
+            console.log(json);
+            setGrade(json.punctaj); // Corectat de la 'puctaj' la 'punctaj'
+            setTimeout(() =>{
+              setGrading(false);
+            }, 7000)
+        }
+    }
+
     if(!materii.includes(materie.toLowerCase())){
         return <NotFound/>
     }
 
     return (
         <div className='flex flex-row relative z-30'>
+            {/* Loading Overlay */}
+            {punctaje &&
+            <Button className="absolute right-2 top-2 z-50" color="secondary" onPress={() =>{setIsPunctajeOpen(true)}}>
+                Punctaje
+            </Button>
+            }
+            {grading && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center" style={{zIndex: 1000}}>
+                <div className="bg-default-100 p-8 rounded-lg flex flex-col items-center gap-4">
+                    {!grade &&
+                    <div className="bg-default-100 p-8 rounded-lg flex flex-col items-center gap-4">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
+                        <p className="text-default-600 font-medium">Se corectează subiectul...</p> 
+                    </div>
+                    }
+                    {grade &&
+                    <div>
+                        <p className="text-default-600 font-medium">Subiectul a fost corectat!</p>
+                        <p className="text-default-600 font-medium">Felicitari, ai primit <span className={grade < 50 ? 'text-red-600' : grade => 50 && grade < 90 ? 'text-yellow-400' : 'text-green-600'}> {grade} </span> puncte!</p>
+                    </div>
+                    }
+                </div>
+            </div>
+            )}
             <Modal isOpen={isConfirmOpenTextBox} onOpenChange={setIsConfirmOpenTextBox}>
                 <ModalContent>
                     {(onClose) => (
@@ -327,6 +400,69 @@ const ViewSubiect = () => {
                     )}
                 </ModalContent>
             </Modal>
+            <Modal isOpen={isPunctajeOpen} size="full" onOpenChange={setIsPunctajeOpen}>
+                <ModalContent>
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">
+                                Punctaje
+                            </ModalHeader>
+                            <ModalBody>
+                                    <ScrollShadow 
+                                        className="mt-6 border border-default-200 rounded-lg mx-auto w-[95vw]"
+                                        style={{ maxHeight: "80vh" }}
+                                    >
+                                    <div className="divide-y divide-default-200">
+                                        {punctaje?.map((evaluare, index) => (
+                                        <div key={index} className="p-4 hover:bg-default-50 transition-colors">
+                                            {/* ID Evaluare */}
+                                            <div className="flex items-center gap-2 text-sm text-default-600 mb-2">
+                                            <div className="w-2 h-2 bg-primary-500 rounded-full"></div>
+                                            <span>#{subiectId}</span>
+                                            </div>
+
+                                            {/* Detalii Evaluare */}
+                                            <div className="flex justify-between items-start">
+                                            <div>
+                                                <p className="font-medium">{user.username}</p>
+                                                <p className="text-sm text-default-500">
+                                                {format(new Date(evaluare.createdAt), 'dd MMMM yyyy, HH:mm', { locale: ro })}
+                                                </p>
+                                                <span className="text-xs text-primary-500 bg-primary-50 px-2 py-1 rounded-full mt-1">
+                                                {evaluare.status || 'Evaluate finalizată'}
+                                                </span>
+                                            </div>
+
+                                            {/* Punctaj */}
+                                            <div className={`
+                                                px-3 py-1 rounded-full text-sm font-semibold
+                                                ${evaluare.punctaj === 100 ? 'bg-success-100 text-success-600' : 
+                                                evaluare.punctaj >= 75 ? 'bg-warning-100 text-warning-600' : 
+                                                'bg-danger-100 text-danger-600'}
+                                            `}>
+                                                {evaluare.punctaj}
+                                            </div>
+                                            </div>
+                                        </div>
+                                        ))}
+                                    </div>
+                                </ScrollShadow>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button 
+                                    color="danger" 
+                                    onPress={() => {
+                                        handleClearCanvas(); 
+                                        onClose();
+                                    }}
+                                >
+                                    Inchide
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
             <div className='w-1/2 h-[calc(100vh-65px)] overflow-hidden'>
                 {subiect && (
                     <Worker workerUrl={`https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`}>
@@ -352,7 +488,7 @@ const ViewSubiect = () => {
                                 className='font-bold'>{`${viewSubiect?.descriere.charAt(0).toUpperCase()}${viewSubiect?.descriere.slice(1)}`}</span>
                             </p>
                             <p className='text-lg'>
-                                Postat de: <span onClick={() => navigate(`/profil/${viewSubiect?.username}`)}
+                                Postat de: <span onClick={() => navigate(`/profile/${viewSubiect?.username}`)}
                                 className='font-bold cursor-pointer'>{`${viewSubiect?.username.charAt(0).toUpperCase()}${viewSubiect?.username.slice(1)}`}</span>
                             </p>
                             <p className='text-lg'>
@@ -452,7 +588,7 @@ const ViewSubiect = () => {
                         color="primary" 
                         size="lg"
                         onPress={() => {
-                        console.log('Trimite soluțiile:', { images, texts, canvasImages });
+                            handleCorectareSubiect();
                         }}
                         className="font-semibold text-lg"
                     >

@@ -11,7 +11,8 @@ const{
     getSubiect,
     gradeSubiect,
     addToSubiect,
-    getRezolvariSubiect
+    getRezolvariSubiect,
+    getPunctaje
 } = require('../controllers/subiecteController');
 
 const storage = multer.memoryStorage();
@@ -32,6 +33,7 @@ router.delete('/deleteSubiect/:id', deleteSubiect);
 router.get('/getSubiect/:id', getSubiect);
 router.post('/gradeSubiect', gradeSubiect);
 router.post('/addToSubiect', addToSubiect);
-router.get('/getRezolvariSubiect/:id/:username', getRezolvariSubiect)
+router.get('/getRezolvariSubiect/:id/:username', getRezolvariSubiect);
+router.get('/getPunctaje/:id/:username', getPunctaje)
 
 module.exports= router;
