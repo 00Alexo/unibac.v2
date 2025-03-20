@@ -33,7 +33,7 @@ function AppRoutes() {
   const hideNavBar = location.pathname === '/game';
   
   useEffect(() => {
-    if (/^\/minaai(\/.*)?$/.test(location.pathname.toLowerCase())) { // regex pt a face navbaru dark la minaAi
+    if (/^\/(minaai|subiectetracker)(\/.*)?$/.test(location.pathname.toLowerCase())) {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");

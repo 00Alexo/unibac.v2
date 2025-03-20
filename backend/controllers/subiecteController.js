@@ -365,6 +365,23 @@ const getPunctaje = async(req, res) =>{
   }
 }
 
+const getSubiecteRezolvateTotale = async(req, res)=>{
+  try{
+    const {username} = req.params;
+    if(!username)
+      return res.status(400).json({error: "Trebuie sa fii logat!"});
+
+    const user = await userModel.findOne({username});
+
+    const subiecte = user.subiecte;
+
+    res.status(200).json({stele: subiecte.length});
+  }catch(error){
+    console.error("Eroare la afișarea punctajelor:", err);
+    res.status(500).json({error:err});
+  }
+}
+
 
 module.exports = {
     uploadPdf,
@@ -378,5 +395,6 @@ module.exports = {
     gradeSubiect,
     addToSubiect,
     getRezolvariSubiect,
-    getPunctaje
+    getPunctaje,
+    getSubiecteRezolvateTotale
 }
