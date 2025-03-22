@@ -9,7 +9,7 @@ export const useSignup = () =>{
     const [errorFields, setErrorFields] = useState(null);
     const {dispatch} = useAuthContext();
 
-    const signup = async(username, email, statut, password, confirmPassword) =>{
+    const signup = async(username, email, password, confirmPassword, statut, judet) =>{
         setError(null);
         setIsLoading(true);
         if(statut === '$.0')
@@ -22,7 +22,7 @@ export const useSignup = () =>{
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({username, email, statut, password, confirmPassword})
+            body: JSON.stringify({username, email, statut, password, confirmPassword, judet})
         })
         const json = await response.json();
         if(!response.ok){

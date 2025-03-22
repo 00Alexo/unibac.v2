@@ -9,11 +9,11 @@ const Subiecte = () => {
     const [subiecte, setSubiecte] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [materii, setMaterii] = useState(['informatica', 'matematica', 'logica', 'economie'])
+    const [materii, setMaterii] = useState(['informatica', 'matematica', 'logica', 'economie', 'psihologie'])
 
     const getSubiecte = async () => {
         setLoading(true);
-        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/getSubiecte?materie=${materie}`, {
+        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/getSubiecte?materie=${materie.toLowerCase()}`, {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json'

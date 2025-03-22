@@ -15,13 +15,14 @@ const createToken = (_id) =>{
 
 const signup = async(req, res) =>{
     try{
-        const {username, email, password, confirmPassword, statut} = req.body;
+        const {username, email, password, confirmPassword, statut, judet} = req.body;
         const saltRounds = 12; let errorFields = [];
 
         if (!username) errorFields.push({field: "username", error: "Acest camp este obligatoriu!"});
         if (!password) errorFields.push({field: "pass", error: "Acest camp este obligatoriu!"});
         if (!confirmPassword) errorFields.push({field: "cpass", error: "Acest camp este obligatoriu!"});
         if (!statut) errorFields.push({field: "statut", error: "Acest camp este obligatoriu!"});
+        if (!judet) errorFields.push({field: "judet", error: "Acest camp este obligatoriu!"});
         if (!email) errorFields.push({field: "email", error: "Acest camp este obligatoriu!"});
         
         if (errorFields.length > 0) {
@@ -62,6 +63,8 @@ const signup = async(req, res) =>{
 
         const hashedPassword = await bcrypt.hash(password, saltRounds);
 
+        timestamp = new Date().toLocaleString('ro-RO', { hour12: false });
+
         const data = {
             username: username.toLowerCase(),
             email,
@@ -87,6 +90,7 @@ const signup = async(req, res) =>{
             activitate: [{type: 'welcome!', msg: `s-a inregistrat pe platforma!`, timestamp: timestamp, currentAvatar: ''}],
             clase:[],
             subiecte:[],
+            judet
         }
         const user = await userModel.create(data);
         const token = createToken(user._id);

@@ -55,6 +55,15 @@ const NavBar = () => {
     const {isOpen : isOpenClass, onOpen:onOpenClass, onOpenChange: onOpenChangeClass, onClose: onCloseClass} = useDisclosure();
     const {joinClass, error: errorCreateClass, isLoading: isLoadingCreateClass, errorFields, notification: notificationClass} = useJoinClass();
 
+    const subjectConfig = [
+      { name: 'Informatică', path: 'informatica' },
+      { name: 'Matematică', path: 'matematica' },
+      { name: 'Psihologie', path: 'psihologie' },
+      { name: "Economie", path: "Economie"},
+      { name: "Logica", path: "Logica"}
+    ];
+    
+
     const {logout} = useLogout();
 
   const handleLogoutClick = () =>{
@@ -209,60 +218,14 @@ const NavBar = () => {
             base: "gap-4",
           }}>
           <DropdownSection showDivider={userData?.statut=="profesor"} title="Elevi"> 
-          <DropdownItem
-            onClick={() => navigate('/subiecte/informatica')}
-            key="Informatica"
-          >
-            Informatica
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/matematica')}
-            key="Matematica"
-          >
-            Matematica
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/fizica')}
-            key="Fizica"
-          >
-            Fizica
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/chimie')}
-            key="Chimie"
-          >
-            Chimie
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/romana')}
-            key="Romana"
-          >
-            Romana
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/biologie')}
-            key="Biologie"
-          >
-            Biologie
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/Istorie')}
-            key="Istorie"
-          >
-            Istorie
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/geografie')}
-            key="Geografie"
-          >
-            Geografie
-          </DropdownItem>
-          <DropdownItem
-            onClick={() => navigate('/subiecte/Psihologie')}
-            key="Psihologie"
-          >
-            Psihologie
-          </DropdownItem>
+            {subjectConfig.map(({ name, path }) => (
+              <DropdownItem
+                key={path}
+                onClick={() => navigate(`/subiecte/${path}`)}
+              >
+                {name}
+              </DropdownItem>
+            ))}
           </DropdownSection>
           {userData?.statut=="profesor" &&
           <DropdownSection  title="Profesori">

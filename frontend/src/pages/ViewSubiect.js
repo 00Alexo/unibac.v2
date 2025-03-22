@@ -413,7 +413,7 @@ const ViewSubiect = () => {
                                         style={{ maxHeight: "80vh" }}
                                     >
                                     <div className="divide-y divide-default-200">
-                                        {punctaje?.map((evaluare, index) => (
+                                        {[...punctaje]?.reverse().map((evaluare, index) => (
                                         <div key={index} className="p-4 hover:bg-default-50 transition-colors">
                                             {/* ID Evaluare */}
                                             <div className="flex items-center gap-2 text-sm text-default-600 mb-2">

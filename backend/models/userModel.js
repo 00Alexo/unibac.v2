@@ -20,6 +20,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    judet:{
+        type: String,
+        required: true,
+    },
     avatar:{
         type: String,
         required: false

@@ -36,7 +36,6 @@
     margin:0 auto;
     font-family: 'Montserrat ExtraBold';
     font-size: 1.7rem;
-    color: #D5D8DF;
 }
 
 .contains-inputs{
@@ -62,7 +61,7 @@
 .or-sign-with-line{
     width: 48%;
     height:1px;
-    background-color:#D5D8DF;
+    background-color:#515357;
 }
 
 .loginIcons{
