@@ -21,6 +21,31 @@ const ViewProfile = () => {
     const [notification, setNotification] = useState(null);
     const fileInputRef = useRef(null);
     const [isHovered, setIsHovered] = useState(null);
+    const [dataForCalendar, setDataForCalendar] = useState([]);
+    const [totalSubiecte, setTotalSubiecte] = useState(0);
+
+    const getUserSubiecteTotale = async () =>{
+        const response = await fetch(`${process.env.REACT_APP_API}/api/subiecte/getUserSubiecteTotale/${username}`,{
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json();
+        if(!response.ok){
+            console.log(json.error);
+            setErroare("A apărut o eroare la încărcarea subiectelor.");
+            setTimeout(() => {
+                setErroare(null);
+            }, 7000);
+            setLoading(false);
+        }
+        if(response.ok){
+            console.log(json);
+            setLoading(false);
+            setDataForCalendar(json);
+        }
+    }
 
     const updateUserAvatar = async (pic) =>{
         setLoading(true);
@@ -80,6 +105,13 @@ const ViewProfile = () => {
             setLoading(false);
         }
     }
+
+    useEffect(() =>{
+        if(user){
+            getUserSubiecteTotale();
+            setTotalSubiecte(dataForCalendar.reduce((sum, entry) => sum + entry.value, 0));
+        }
+    }, [user])
 
     // if(view != undefined && view != null && view?.toLowerCase() != 'setari' && view?.toLowerCase() != 'articole'
     // && view?.toLowerCase() != 'subiecte'
@@ -207,7 +239,7 @@ const ViewProfile = () => {
                     </div>
                     <div className='border border-secondary rounded-lg bg-white w-[68.5%] pr-10 pl-10 pt-4 pb-4'>
                         <div className='flex flex-row justify-between'>
-                            <p className='text-2xl'> 134 de subiecte rezolvate in ultimul an</p>
+                            <p className='text-2xl'> {totalSubiecte} de subiecte rezolvate in ultimul an</p>
                             <Select
                                 className="max-w-28"
                                 placeholder={anSelectat}
@@ -220,16 +252,7 @@ const ViewProfile = () => {
                             </Select>
                         </div>
                         <ResponsiveCalendar
-                            data={[
-                                { day: '2024-01-01', value: 3 },
-                                { day: '2025-02-05', value: 10 },
-                                { day: '2025-01-01', value: 10 },
-                                { day: '2025-03-05', value: 57 },
-                                { day: '2025-04-01', value: 43 },
-                                { day: '2025-05-05', value: 37 },
-                                { day: '2025-06-01', value: 23 },
-                                { day: '2025-07-05', value: 17 },
-                            ]}
+                            data={dataForCalendar}
                             from={`${anSelectat}-01-01`}
                             to={`${anSelectat}-01-31`}
                             emptyColor="#eeeeee"

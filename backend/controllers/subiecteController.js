@@ -146,7 +146,7 @@ const downloadBarem = async (req, res) => {
     }
 }
 
-getRezolvariSubiect = async(req, res)=>{
+const getRezolvariSubiect = async(req, res)=>{
   try{
     const {id, username} = req.params;
 
@@ -358,7 +358,9 @@ const getPunctaje = async(req, res) =>{
 
     const subiecte = user.subiecte.find(s => s._id.toString() === id);
 
-    res.status(200).json(subiecte.punctaj);
+    const punctaje = subiecte.punctaj || [];
+
+    res.status(200).json(punctaje);
   }catch(err){
     console.error("Eroare la afișarea punctajelor:", err);
     res.status(500).json({error:err});
@@ -383,6 +385,42 @@ const getSubiecteRezolvateTotale = async(req, res)=>{
 }
 
 
+const getUserSubiecteTotale = async (req, res) => {
+  try {
+    const { username } = req.params;
+    
+    if (!username) {
+      return res.status(400).json({ error: "Trebuie să fii logat!" });
+    }
+
+    const user = await userModel.findOne({ username });
+    
+    if (!user) {
+      return res.status(400).json({ error: "Utilizatorul nu a fost găsit!" });
+    }
+
+    const rezolvariPerZi = {};
+
+    (user.subiecte || []).forEach(subiect => {
+      (subiect.punctaj || []).forEach(punctaj => {
+        const dataKey = punctaj.createdAt.toISOString().split('T')[0];
+        rezolvariPerZi[dataKey] = (rezolvariPerZi[dataKey] || 0) + 1;
+      });
+    });
+
+    const rezultat = Object.entries(rezolvariPerZi).map(([day, value]) => ({
+      day,
+      value
+    }));
+
+    res.status(200).json(rezultat);
+
+  } catch (err) {
+    console.error("Eroare get subiecte totale", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
     uploadPdf,
     downloadSubiect,
@@ -396,5 +434,6 @@ module.exports = {
     addToSubiect,
     getRezolvariSubiect,
     getPunctaje,
-    getSubiecteRezolvateTotale
+    getSubiecteRezolvateTotale,
+    getUserSubiecteTotale
 }

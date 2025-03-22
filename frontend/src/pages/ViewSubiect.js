@@ -274,7 +274,7 @@ const ViewSubiect = () => {
         }
         if(response.ok){
             console.log(json);
-            setGrade(json.punctaj); // Corectat de la 'puctaj' la 'punctaj'
+            setGrade(json.punctaj);
             setTimeout(() =>{
               setGrading(false);
             }, 7000)
@@ -305,8 +305,18 @@ const ViewSubiect = () => {
                     {grade &&
                     <div>
                         <p className="text-default-600 font-medium">Subiectul a fost corectat!</p>
-                        <p className="text-default-600 font-medium">Felicitari, ai primit <span className={grade < 50 ? 'text-red-600' : grade => 50 && grade < 90 ? 'text-yellow-400' : 'text-green-600'}> {grade} </span> puncte!</p>
-                    </div>
+                        <p className="text-default-600 font-medium">
+                            Felicitari, ai primit 
+                            <span className={
+                                grade < 50 
+                                ? 'text-red-600' 
+                                : grade >= 50 && grade < 90 
+                                    ? 'text-yellow-400' 
+                                    : 'text-green-600'
+                            }> {grade} </span> 
+                            puncte!
+                        </p>
+                   </div>
                     }
                 </div>
             </div>
@@ -572,7 +582,7 @@ const ViewSubiect = () => {
                                     section.setter(prev => prev.filter((_, i) => i !== index));
                                     }}
                                 >
-                                    Șterge
+                                    Sterge
                                 </Button>
                                 </div>
                             ))}

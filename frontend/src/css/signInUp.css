@@ -5,12 +5,8 @@
 }
 
 .contains-cmpSignInUp{
-    background-color: black;
-    width: calc(58% - 25px);
-    margin-left:25px;
-    margin-top: 25px;
-    border-radius: 16px;
-    height: calc(100vh - 126px);
+    width: calc(58%);
+    height: calc(100vh - 69px);
     min-height:450px;
     max-height: 1000px !important;
 }
@@ -25,8 +21,8 @@
     flex-direction: column;
     /*padding: 50px 0px 0px 75px;*/
     width: calc(42%);
-    height: calc(100vh - 126px);
-    margin-top:25px;
+    height: calc(100vh - 65px);
+    padding-top:25px;
     min-height:450px;
     max-height: 1000px !important;
     animation: 0.5s slideFromRight ease-in-out;
@@ -35,7 +31,7 @@
 .signUp-create-account-text{
     margin:0 auto;
     font-family: 'Montserrat ExtraBold';
-    font-size: 1.7rem;
+    font-size: 2.5rem;
 }
 
 .contains-inputs{
