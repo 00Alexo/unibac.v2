@@ -14,7 +14,8 @@ const{
     getRezolvariSubiect,
     getPunctaje,
     getSubiecteRezolvateTotale,
-    getUserSubiecteTotale
+    getUserSubiecteTotale,
+    getSubiectePostateByUser
 } = require('../controllers/subiecteController');
 
 const storage = multer.memoryStorage();
@@ -39,5 +40,6 @@ router.get('/getRezolvariSubiect/:id/:username', getRezolvariSubiect);
 router.get('/getPunctaje/:id/:username', getPunctaje)
 router.get('/getSubiecteRezolvateTotale/:username', getSubiecteRezolvateTotale);
 router.get('/getUserSubiecteTotale/:username', getUserSubiecteTotale);
+router.get('/getSubiectePostateByUser/:username', getSubiectePostateByUser);
 
 module.exports= router;

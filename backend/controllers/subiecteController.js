@@ -421,6 +421,21 @@ const getUserSubiecteTotale = async (req, res) => {
   }
 };
 
+const getSubiectePostateByUser = async (req, res)=>{
+  try{
+    const {username} = req.params;
+    if(!username)
+      return res.status(400).json({error: "Trebuie sa fii logat!"});
+
+    const subiecte = await subiecteModel.find({username}).sort({ createdAt: -1 }).select('-subiect -barem');
+
+    res.status(200).json(subiecte);
+  }catch(err){
+    console.error("Eroare la afișarea subiectelor postate de utilizator:", err);
+    res.status(500).json({error:err});
+  }
+}
+
 module.exports = {
     uploadPdf,
     downloadSubiect,
@@ -435,5 +450,6 @@ module.exports = {
     getRezolvariSubiect,
     getPunctaje,
     getSubiecteRezolvateTotale,
-    getUserSubiecteTotale
+    getUserSubiecteTotale,
+    getSubiectePostateByUser
 }

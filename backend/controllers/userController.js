@@ -218,11 +218,31 @@ const statusVerifier = async(req, res) =>{
     }
 }
 
+const getUserActivitate = async(req, res) =>{
+    try{
+        const {username} = req.params;
+        
+        if(!username)
+            return res.status(400).json({error: 'Trebuie sa fii logat!'});
+
+        const user = await userModel.findOne({username})
+
+        if(!user)
+            return res.status(400).json({error: 'Utilizatorul nu exista!'});
+
+        res.status(200).json(user.activitate);
+    }catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
 module.exports={
     signup,
     signin,
     getUserProfile,
     updateUserAvatar,
     search,
-    statusVerifier
+    statusVerifier,
+    getUserActivitate
 }
