@@ -9,8 +9,8 @@ const Loading = () => {
                 left: 0,
                 width: '100%',
                 height: '100%',
-                backgroundColor: 'rgba(0, 0, 0, 0.5)', // Ajustează opacitatea și culoarea overlay-ului după nevoi
-                zIndex: 999,
+                backgroundColor: 'rgba(0, 0, 0, 0.7)', // Ajustează opacitatea și culoarea overlay-ului după nevoi
+                zIndex: 9999,
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',

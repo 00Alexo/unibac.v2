@@ -5,8 +5,8 @@ import { useAuthContext } from '../hooks/useAuthContext'
 import NotFound from "./NotFound.js";
 import { Error } from "../components/alertBox.js";
 import { EyeFilledIcon, EyeSlashFilledIcon } from "./SignUp.js";
-import CmpCreateClass from "../components/CmpCreateClass.js";
 import {useCreateClass} from "../hooks/useCreateClass.js";
+import CmpSignInUp from "../components/CmpSignInUp.js";
 
 const CreateClass = () => {
     const fileInputRef = useRef(null);
@@ -83,14 +83,11 @@ const CreateClass = () => {
             <NotFound/>
         )
     return (
-        <div className="flex relative z-30">
+        <div className="flex">
             {error && <Error error={error}/>}
-            <div className="flex flex-row mx-auto w-[100%] mb-5 mt-[30px] pl-7 gap-10 pr-7 justify-between" style={{borderRadius:'10px'}}>
-                <div className="w-[60%] bg-[#030108] contains-cmp-createclass">
-                    <CmpCreateClass/>
-                </div>
-                <form className="flex flex-col contains-createclass w-[40%]">
-                    <p className="create-class-text text-center mt-5">CREATE CLASS</p>
+            <div className="flex flex-row mx-auto w-[100%] pl-7 pr-7 justify-between" style={{borderRadius:'10px'}}>
+                <form className="flex flex-col pr-8 contains-createclass w-[47%] relative z-10 border-r-2 border-[#c4c8d8]">
+                    <p className="create-class-text text-center mt-12">CREATE CLASS</p>
                     <div className="contains-class-inputs mt-20 w-full mx-auto">
                         <div className='bg-white flex w-full flex-wrap md:flex-nowrap md:mb-0 gap-4'>
                             <Input required isClearable variant="bordered"
@@ -263,6 +260,9 @@ const CreateClass = () => {
                         </div>
                     </div>
                 </form>
+                <div className="contains-cmpSignInUp minhgh-signUp">
+                    <CmpSignInUp/>
+                </div>
             </div>
         </div>
     );
