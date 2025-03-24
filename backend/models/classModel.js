@@ -60,6 +60,10 @@ const ClassSchema = new mongoose.Schema({
     logs:{
         type:Array,
         required: true
+    },
+    anunturi:{
+        type:Array,
+        required: true
     }
 
   }, {timestamps: true});

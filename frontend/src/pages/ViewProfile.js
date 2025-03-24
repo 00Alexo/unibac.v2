@@ -179,7 +179,7 @@ const ViewProfile = () => {
     return (
         <div className='flex flex-row z-30 relative p-4 gap-4 h-[calc(100vh-65px)]'>
             {isLoading && <Loading/>}
-            <div className='flex flex-col w-2/12 border border-secondary rounded-lg rounded-b-none bg-white pt-4 pr-5 pl-5 h-full'> {/* left side*/}
+            <div className='flex flex-col w-2/12 border border-secondary rounded-lg rounded-b-none bg-slate-100 shadow-md pt-4 pr-5 pl-5 h-full'> {/* left side*/}
                 <div className='flex flex-col justify-between h-full'>
                     <div>
                         <div className='mb-'>
@@ -238,7 +238,7 @@ const ViewProfile = () => {
             {view?.toLowerCase() === 'overview' || !view ? (
             <div className='w-10/12 flex flex-col justify-between p-2'> {/* right side*/}
                 <div className='h-[40%] flex flex-row justify-between'>
-                    <div className='border border-secondary rounded-lg bg-white w-[30%]'>
+                    <div className='border border-secondary rounded-lg bg-slate-100 shadow-md w-[30%]'>
                         <input
                             style={{display:'none'}}
                             ref={fileInputRef}
@@ -270,8 +270,8 @@ const ViewProfile = () => {
                             src={isHovered ? uploadImage : `${userProfile?.avatar}`}
                         />
                     </div>
-                    <div className='rounded-lg w-[68.5%] bg-white'>
-                    <ScrollShadow hideScrollBar={true} className='bg-white flex border-2 h-[100%] rounded-2xl flex-row w-[100%] justify-between'>
+                    <div className='rounded-lg w-[68.5%] bg-slate-100 shadow-md'>
+                    <ScrollShadow hideScrollBar={true} className='bg-slate-100 shadow-md flex border-2 h-[100%] rounded-2xl flex-row w-[100%] justify-between'>
                         <Table removeWrapper className='max-w-[1200px] mx-auto'>
                             <TableHeader>
                                 <TableColumn className="text-md">Clasa</TableColumn>
@@ -303,7 +303,7 @@ const ViewProfile = () => {
                     </div>
                 </div>
                 <div className='h-[27.5%] flex flex-row justify-between'>
-                    <div className='border border-secondary rounded-lg bg-white w-[30%] pt-4 pr-6 pl-6 pb-4'>
+                    <div className='border border-secondary rounded-lg bg-slate-100 shadow-md w-[30%] pt-4 pr-6 pl-6 pb-4'>
                         <p className='text-xl font-bold'> Insigne</p>
                         <div className='flex flex-row gap-2 flex-wrap'>
                             {userProfile?.badges?.map((user, index) => (
@@ -324,11 +324,11 @@ const ViewProfile = () => {
                             ))}
                         </div>
                     </div>
-                    <div className='border border-secondary rounded-lg bg-white w-[68.5%] pr-10 pl-10 pt-4 pb-4'>
+                    <div className='border border-secondary rounded-lg bg-slate-100 shadow-md w-[68.5%] pr-10 pl-10 pt-4 pb-4'>
                         <div className='flex flex-row justify-between'>
                             <p className='text-2xl'> {totalSubiecte} de subiecte rezolvate in ultimul an</p>
                             <Select
-                                className="max-w-28"
+                                className="max-w-28" color='primary'
                                 placeholder={anSelectat}
                                 onChange={(e) => { setAnSelectat(e.target.value); console.log(e.target.value)}}
                                 value={anSelectat}
@@ -339,29 +339,29 @@ const ViewProfile = () => {
                             </Select>
                         </div>
                         <ResponsiveCalendar
-                            data={dataForCalendar}
-                            from={`${anSelectat}-01-01`}
-                            to={`${anSelectat}-01-31`}
-                            emptyColor="#eeeeee"
-                            colors={['#9be9a8', '#40c463', '#30a14e', '#216e39']}
-                            margin={{ top: 4, right: 10, bottom: 4, left: 10 }}
-                            yearSpacing={40}
-                            monthBorderColor="#ffffff"
-                            dayBorderWidth={2}
-                            dayBorderColor="#ffffff"
-                            legends={[{
-                                anchor: 'bottom-right',
-                                direction: 'row',
-                                translateY: 36,
-                                itemCount: 4,
-                                itemWidth: 42,
-                                itemHeight: 36
-                            }]}
-                        />
+                        data={dataForCalendar}
+                        from={`${anSelectat}-01-01`}
+                        to={`${anSelectat}-01-31`}
+                        emptyColor="#C6CFEF"  // Schimbat aici
+                        colors={['#9be9a8', '#40c463', '#30a14e', '#216e39']}
+                        margin={{ top: 4, right: 10, bottom: 4, left: 10 }}
+                        yearSpacing={40}
+                        monthBorderColor="#F1F5F9"
+                        dayBorderWidth={2}
+                        dayBorderColor="#F1F5F9"
+                        legends={[{
+                            anchor: 'bottom-right',
+                            direction: 'row',
+                            translateY: 36,
+                            itemCount: 4,
+                            itemWidth: 42,
+                            itemHeight: 36
+                        }]}
+                    />
                     </div>
                 </div>
                 <div className='h-[27.5%] flex flex-row justify-between'>
-                    <div className='border border-secondary rounded-lg bg-white w-[68.5%]'>
+                    <div className='border border-secondary rounded-lg bg-slate-100 shadow-md w-[68.5%]'>
                         <div class="lines1">
                             <div class="line1"></div>
                             <div class="line1"></div>
@@ -379,7 +379,7 @@ const ViewProfile = () => {
                             <div class="line1"></div>
                         </div>
                     </div>
-                    <div className='border border-secondary rounded-lg bg-white w-[30%]'>
+                    <div className='border border-secondary rounded-lg bg-slate-100 shadow-md w-[30%]'>
                         <p className='text-xl font-bold pl-4 pt-3'> Statistici</p>
                         <div className='w-full pl-3 pr-3 pt-2 pb-2 rounded-md flex justify-between items-center'>
                             <div className='flex flex-row items-center gap-2'> 
@@ -442,7 +442,7 @@ const ViewProfile = () => {
             ) : view?.toLowerCase() == 'activitate' ? (
                 <div className='w-10/12 flex flex-col justify-between p-2'>
                     <div className='h-[70%]'>
-                    <ScrollShadow size={0} hideScrollBar={true} className='bg-white border-secondary border-2 w-[100%] mx-auto h-[100%] rounded-xl pt-5 pb-5 pl-5 pr-5 flex gap-3 flex-col'>
+                    <ScrollShadow size={0} hideScrollBar={true} className='bg-slate-100 shadow-md border-secondary border-2 w-[100%] mx-auto h-[100%] rounded-xl pt-5 pb-5 pl-5 pr-5 flex gap-3 flex-col'>
                         {userProfile?.activitate.slice().reverse().map((activitate, index) => {
                             return(
                                 <div className='flex flex-row p-1 items-center justify-between'>
@@ -461,7 +461,7 @@ const ViewProfile = () => {
                     </ScrollShadow>
                     </div>
                     <div className='w-[100%] h-[26%]'>
-                        <div className='border border-secondary rounded-lg bg-white h-full'>
+                        <div className='border border-secondary rounded-lg bg-slate-100 shadow-md h-full'>
                             <div class="lines1">
                                 <div class="line1"></div>
                                 <div class="line1"></div>
@@ -483,7 +483,7 @@ const ViewProfile = () => {
                 </div>
             ): view?.toLowerCase() == 'setari' ? (
             <div className='w-10/12 flex flex-col p-2 gap-6'>
-                <div className='border border-secondary rounded-lg bg-white p-6 shadow-sm'>
+                <div className='border border-secondary rounded-lg bg-slate-100 shadow-md p-6'>
                     <h2 className='text-xl font-bold text-[#1a365d] mb-4'>Schimbare Email</h2>
                     
                     <div className='flex flex-col gap-4 max-w-2xl'>
@@ -536,7 +536,7 @@ const ViewProfile = () => {
                 </div>
         
                 {/* Secțiune Schimbare Parolă */}
-                <div className='border border-secondary rounded-lg bg-white p-6 shadow-sm'>
+                <div className='border border-secondary rounded-lg bg-slate-100 shadow-md p-6 '>
                     <h2 className='text-xl font-bold text-[#1a365d] mb-4'>Schimbare Parolă</h2>
                     
                     <div className='flex flex-col gap-4 max-w-2xl'>
@@ -608,7 +608,7 @@ const ViewProfile = () => {
             </div>
             ) : view?.toLowerCase() == 'postari' ? (
             <div className='w-10/12 flex flex-col p-2 gap-6'>
-                <div className='border border-secondary rounded-lg bg-white p-6'>
+                <div className='border border-secondary rounded-lg bg-slate-100 shadow-md p-6'>
                     <div className='flex justify-between items-center mb-6'>
                         <h2 className='text-2xl font-bold text-[#1a365d]'>Subiecte Postate</h2>
                         <Select 
@@ -664,7 +664,7 @@ const ViewProfile = () => {
                     </div>
                 </div>
         
-                <div className='border border-secondary rounded-lg bg-white p-6'>
+                <div className='border border-secondary rounded-lg bg-slate-100 shadow-md p-6'>
                     <div className='flex justify-between items-center mb-6'>
                         <h2 className='text-2xl font-bold text-[#1a365d]'>Articole Publicate</h2>
                         <Button color="primary"

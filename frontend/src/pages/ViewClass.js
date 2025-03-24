@@ -3,7 +3,7 @@ import {useState, useEffect, useRef} from 'react';
 import checkmark from '../assets/blue-checkmark.png'
 import { useGetProfile } from '../hooks/useGetProfile';
 import NotFound from './NotFound';
-import {Avatar, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Checkbox
+import {Avatar, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Checkbox, ScrollShadow, Chip
 } from "@nextui-org/react";
 import { useAuthContext } from '../hooks/useAuthContext';
 import {Error, NotificationBox} from '../components/alertBox';
@@ -11,10 +11,12 @@ import Loading from '../components/Loading';
 import {useViewClass} from "../hooks/useViewClass"
 import { MailIcon, EyeFilledIcon, EyeSlashFilledIcon } from './SignUp';
 import { useJoinClass } from '../hooks/useJoinClass';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faEdit, faTrash, faComments, faSmile, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 const ViewClass = () => {
     const {user} = useAuthContext();
-    const {classId} = useParams();
+    const {classId, view} = useParams();
     const {classData, error, isLoading, refetchClass} = useViewClass(classId, user?.username);
     const location = useLocation();
     const navigate = useNavigate();
@@ -25,12 +27,33 @@ const ViewClass = () => {
     const [id, setId] = useState(classId);
     const [password, setPassword] = useState(null);
     const {joinClass, error: errorCreateClass, isLoading: isLoadingCreateClass, errorFields, notification} = useJoinClass();
+    const [mesaj, setMesaj] = useState('');
+    const scrollRef = useRef(null);
 
     const handleJoinClass = async (e) =>{
         const close = await joinClass(classId, password, user?.username, user?.token);
         
         if(close){
             onClose();
+            refetchClass();
+        }
+    }
+
+    const trimiteMesaj = async()=>{
+        const response = await fetch(`${process.env.REACT_APP_API}/api/class/trimiteMesaj`,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({username: user.username, content: mesaj, classId: classId})
+        })
+        const json = await response.json();
+        if(!response.ok){
+            console.log(json.error);
+        }
+        if(response.ok){
+            console.log(json);
+            setMesaj('');
             refetchClass();
         }
     }
@@ -44,6 +67,38 @@ const ViewClass = () => {
             }, 5000)
         }
     }, [location]);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            // Așteaptă următorul frame pentru a permite renderizarea
+            requestAnimationFrame(() => {
+                scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+            });
+        }
+    }, [classData?.chat]); // Rulează de fiecare dată când se actualizează mesajele
+
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (container) {
+            // Verifică dacă utilizatorul este deja aproape de jos
+            const isNearBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 100;
+            
+            if (isNearBottom) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+    }, [classData?.chat?.length]); // Rulează când se schimbă numărul de mesaje
+
+    if(view != undefined && view != null && view?.toLowerCase() != 'anunturi' && view?.toLowerCase() != 'teme'
+    && view?.toLowerCase() != 'teste' && view?.toLowerCase() != 'lectii' && view?.toLowerCase() != 'chat' && view?.toLowerCase() != 'logs')
+        return <NotFound/>
+
+    if (!classData && !isLoading) {
+        return <NotFound/>
+    }
+
+    if(error == 'Clasa invalida!')
+        return <NotFound/>
 
     return (
         <div className='relative z-40'>
@@ -121,10 +176,251 @@ const ViewClass = () => {
                 <p className='text-center scslogin'> Clasa creata cu succes!! </p>
             </div>
             }
-            {classData && !error &&(
-                <>
-                    <p>{classData.creator}</p>
-                </>
+            {classData && !error &&  (
+                <div className='flex flex-col w-[80%] min-h-[calc(100vh-70px)] pt-8 mx-auto relative z-10'>
+                    {/* div poza profil */}
+                    <div>
+                        <div className='flex flex-row items-center gap-4'>
+                            <Avatar
+                                showFallback
+                                name = {classData.className.charAt(0).toUpperCase()}
+                                as="button"
+                                className="w-28 h-28 text-6xl transition-transform"
+                                src={classData?.avatar}
+                            />
+                            <div className='flex flex-col'>
+                                <p className="text-4xl font-bold text-foreground">
+                                    {classData.className}
+                                </p>
+                                <p className="text-default-500">
+                                    {classData.subject}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {/* div descriere + statistici*/}
+                    <div className='flex justify-between w-[100%] mt-8 max-h-[170px]'>
+                        <div className='w-[63%] border border-default-200 rounded-lg p-6 bg-slate-100 shadow-md'>
+                            <h2 className="text-xl font-semibold mb-1">Descriere</h2>
+                            <p className="text-default-600">{classData.description}</p>
+                        </div>
+
+                        <div className='w-[35%] border border-default-200 rounded-lg p-6 pt-4 bg-slate-100 shadow-md'>
+                            <h2 className="text-xl font-semibold mb-2">Statistici</h2>
+                            <div className="space-y-1">
+                                <div className="flex justify-between">
+                                    <span>Studenți</span>
+                                    <span className="text-primary">{classData?.students?.length}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Teme</span>
+                                    <span className="text-primary">{classData?.assignments?.length}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span>Lectii</span>
+                                    <span className="text-primary">{classData?.assignments?.length}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/* restu */}
+                    <div className='flex w-[100%] mt-8 justify-between'>
+                        <div className='w-[63%] rounded-lg p-6'>
+                            <div className="flex gap-4 mb-6 border-b border-default-400">
+                                {['Anunturi', 'Teme', 'Teste', 'Lectii', 'Chat', 'Logs'].map((tab) => (
+                                    <Button 
+                                        key={tab}
+                                        variant="light" 
+                                        className="rounded-none border-b-2 border-transparent data-[active=true]:border-primary"
+                                        onClick={() => navigate(`/clase/${classId}/${tab.toLowerCase()}`)}
+                                    >
+                                        {tab}
+                                    </Button>
+                                ))}
+                            </div>
+                            {view?.toLowerCase() == 'anunturi' || !view ? (
+                                <div className='border border-default-200 rounded-lg p-4 bg-slate-100 
+                                shadow-md h-[37vh] max-h-[340px] flex gap-4 flex-col'>
+                                <p className='bold text-2xl'> Anunturi </p>
+                                <ScrollShadow hideScrollBar className="space-y-4 max-h-[300px]">
+                                {classData?.anunturi?.reverse().map((anunt, index) => (
+                                    <div key={index} className="border border-default-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                        <div className="flex justify-between items-start mb-1">
+                                            <div className="flex items-center gap-3">
+                                                <Avatar name={anunt.username} size="sm" />
+                                                <div>
+                                                    <h3 className="font-semibold">{anunt.username}</h3>
+                                                    <p className="text-default-500 text-sm">{anunt.time}</p>
+                                                </div>
+                                            </div>
+                                            {(user?.username === anunt.username) && (
+                                                <div className="flex gap-2">
+                                                    <Button isIconOnly size="sm" variant="light">
+                                                        <FontAwesomeIcon icon={faEdit} className="text-default-600" />
+                                                    </Button>
+                                                    <Button isIconOnly size="sm" variant="light" color="danger">
+                                                        <FontAwesomeIcon icon={faTrash} />
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </div>
+                                        <p className="text-default-700 whitespace-pre-line">{anunt.anunt}</p>
+                                    </div>
+                                ))}
+                                </ScrollShadow>
+
+                                {classData?.anunturi?.length === 0 && (
+                                    <div className="text-center py-8">
+                                        <p className="text-default-500 mb-4">Nu există anunțuri momentan</p>
+                                    </div>
+                                )}
+                                </div>
+                            ) : view?.toLowerCase() == 'chat' ? (
+                                <div className="w-full h-[37vh] max-h-[340px] flex flex-col">
+                                    <div className="border-b border-default-200 pb-4 mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-primary-100 p-2 rounded-full">
+                                                <FontAwesomeIcon icon={faComments} className="text-primary-600 text-xl"/>
+                                            </div>
+                                            <h2 className="text-2xl font-bold">Chatul Clasei</h2>
+                                            <Chip color="primary" variant="flat">{classData?.students?.length + classData?.teachers?.length + 1} membri</Chip>
+                                        </div>
+                                    </div>
+
+                                    <ScrollShadow hideScrollBar ref={scrollRef} className="flex-1 space-y-4 pr-4 mb-4">
+                                        {classData?.chat?.map((msg, index) => (
+                                            <div key={index} className={`flex ${msg.username === user?.username ? 'justify-end' : 'justify-start'}`}>
+                                                <div className={`max-w-[70%] rounded-xl p-4 ${
+                                                    msg.username === user?.username 
+                                                        ? 'bg-primary-100 ml-auto' 
+                                                        : 'bg-default-100'
+                                                }`}>
+                                                    <div className="flex items-center gap-2 mb-2">
+                                                        <Avatar 
+                                                            name={msg.username} 
+                                                            size="sm" 
+                                                            src={msg.avatar || `https://ui-avatars.com/api/?name=${msg.username}`}
+                                                        />
+                                                        <div>
+                                                            <p className="font-semibold">
+                                                                {msg.username}
+                                                                {classData.teachers.includes(msg.username) && (
+                                                                    <span className="ml-2 text-success-500 text-sm">Profesor</span>
+                                                                )}
+                                                            </p>
+                                                        </div>
+                                                        <p className="text-xs text-default-500 ml-24">
+                                                            {msg.time}
+                                                        </p>
+                                                    </div>
+                                                    <p className="text-default-700 whitespace-pre-wrap">{msg.content}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </ScrollShadow>
+
+                                    <div className="border-t border-default-200 pt-4">
+                                        <div className="flex gap-2">
+                                            <Input
+                                                fullWidth
+                                                variant="bordered"
+                                                placeholder="Scrie un mesaj..."
+                                                endContent={
+                                                    <div className="flex items-center gap-2">
+                                                        <Button isIconOnly variant="light" size="sm">
+                                                            <FontAwesomeIcon icon={faSmile} className="text-default-500"/>
+                                                        </Button>
+                                                        <Button isIconOnly variant="light" size="sm">
+                                                            <FontAwesomeIcon icon={faPaperclip} className="text-default-500"/>
+                                                        </Button>
+                                                    </div>
+                                                }
+                                                value={mesaj}
+                                                onChange={(e) => setMesaj(e.target.value)}
+                                            />
+                                            <Button color="primary" onClick={() => trimiteMesaj()}>
+                                                <FontAwesomeIcon icon={faPaperPlane} className="mr-2"/>
+                                                Trimite
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : <></>}
+                        </div>
+
+                        <div className='w-[35%]'>
+                            <div className='border border-default-200 rounded-lg p-6 bg-slate-100 shadow-md mb-6'>
+                                <div className="flex gap-6 h-[180px]">
+                                    <div className="flex-1 space-y-3">
+                                        <h3 className="font-medium text-default-600 mb-2">Profesori ({classData?.teachers?.length + 1})</h3>
+                                        <ScrollShadow className="space-y-3 h-[150px]" hideScrollBar>
+                                            {/* Creatorul clasei */}
+                                            <div className="flex items-center gap-2">
+                                                <Avatar name={classData?.creator} size="sm" />
+                                                <span className="font-medium">{classData?.creator}</span>
+                                                <span className="text-success-500 text-sm">(Creator)</span>
+                                            </div>
+                                            
+                                            {/* Alți profesori */}
+                                            {classData?.teachers?.map((teacher, index) => (
+                                                <div key={`teacher-${index}`} className="flex items-center gap-2 justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <Avatar name={teacher} size="sm" />
+                                                        <span>{teacher}</span>
+                                                    </div>
+                                                    {user?.username === classData?.creator && (
+                                                        <Button 
+                                                            size="sm" 
+                                                            color="danger" 
+                                                            variant="light"
+                                                        >
+                                                            <FontAwesomeIcon icon={faTimes} className="text-sm" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </ScrollShadow>
+                                    </div>
+
+                                    {/* Coloana Elevi */}
+                                    <div className="flex-1 space-y-3">
+                                        <h3 className="font-medium text-default-600 mb-2">Elevi ({classData?.students?.length})</h3>
+                                        <ScrollShadow className="space-y-3 h-[150px]" hideScrollBar>
+                                            {classData?.students?.map((student, index) => (
+                                                <div key={`student-${index}`} className="flex items-center gap-2 justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <Avatar name={student} size="sm" />
+                                                        <span>{student}</span>
+                                                    </div>
+                                                    {(user?.username === classData?.creator || classData.teachers?.includes(user?.username)) && (
+                                                        <Button 
+                                                            size="sm" 
+                                                            color="danger" 
+                                                            variant="light"
+                                                        >
+                                                            <FontAwesomeIcon icon={faTimes} className="text-sm" />
+                                                        </Button>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </ScrollShadow>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='border border-default-200 rounded-lg p-6 bg-slate-100 shadow-md'>
+                                <h2 className="text-lg font-semibold mb-4">Activitate Recentă</h2>
+                                <div className="space-y-3">
+                                    {classData?.logs?.slice(classData?.logs?.length - 3,classData?.logs?.length).reverse().map((log, index) => (
+                                        <div key={index} className="text-sm">
+                                            <p className="text-default-600">{log}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                                {classData?.logs?.length == 0 && (<p>Nu exista activitate recenta.</p>)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             )}
             {error === 'Clasa privata' && 
                 <main className="mt-5 flex flex-col items-center justify-center bg-light p-4">

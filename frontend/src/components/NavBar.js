@@ -302,7 +302,7 @@ const NavBar = () => {
                   >
                     Posteaza un subiect
                   </DropdownItem>
-                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/subiecte`)}}
+                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/postari`)}}
                     key="Subiect"
                   >
                     Subiecte postate de tine
@@ -315,7 +315,7 @@ const NavBar = () => {
                   >
                     Posteaza un articol
                   </DropdownItem>
-                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/idkyet`)}}
+                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/postari`)}}
                     key="Subiect"
                   >
                     Articole postate de tine
@@ -328,7 +328,7 @@ const NavBar = () => {
                   >
                     Creeaza o clasa
                   </DropdownItem>
-                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/idkyet`)}}
+                  <DropdownItem onClick={() => {navigate(`/profile/${user.username}/overview`)}}
                     key="Subiect"
                   >
                     Clasele tale

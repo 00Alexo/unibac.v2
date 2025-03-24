@@ -6,6 +6,94 @@ const bcrypt = require('bcryptjs');
 
 // FUNCTIONALITATI
 
+const trimiteMesaj = async(req, res)=>{
+    try{
+        const {username, content, classId, avatar} = req.body;
+        console.log(username);
+
+        if(!username)
+            return res.status(400).json({error:"Trebuie sa fii logat!"});
+
+        if(!content)
+            return res.status(400).json({error:"Mesajul nu poate sa fie gol!"});
+
+        if(!classId)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        const clasa = await classModel.findOne({classId});
+
+        if(!clasa)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        if(!clasa.students.includes(username.toLowerCase()) && !clasa.teachers.includes(username.toLowerCase()) && clasa.creator.toLowerCase() !== username.toLowerCase())
+            return res.status(400).json({error:"Nu ai acces la aceasta functie!"});
+
+        const mesaj = {
+            username,
+            avatar,
+            content,
+            time: new Date().toLocaleString('ro-RO', { hour12: false })
+        }
+
+        await classModel.findOneAndUpdate(
+            {classId},
+            {$push: {chat: mesaj}},
+            {new: true}
+        )
+
+        return res.status(200).json({mesaj});
+    }catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
+const posteazaAnunt = async(req, res)=>{
+    try{
+        const {classId, username, anunt} = req.body;
+        if(!classId)
+            return res.status(400).json({error:"Clasa invalida!"});
+        if(!username)
+            return res.status(400).json({error:"Trebuie sa fii logat!"});
+        if(!anunt)
+            return res.status(400).json({error:"Un anunt nu poate sa fie gol!"});
+
+        const check = await classModel.findOne({classId});
+
+        if(!check)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        const user = await userModel.findOne({username});
+
+        if(!user)
+            return res.status(400).json({error:"Trebuie sa fii logat!"});
+
+        if(!check.teachers.includes(username.toLowerCase()) && check.creator.toLowerCase() !== username.toLowerCase())
+            return res.status(400).json({error:"Nu ai acces la aceasta functie!"});
+
+        const clasa = await classModel.findOneAndUpdate(
+            { classId }, 
+            { 
+                $push: { 
+                    anunturi: { 
+                        username, 
+                        anunt, 
+                        time: new Date().toLocaleString('ro-RO', { hour12: false }) 
+                    },
+                    logs: `Anunt nou de la ${username}`
+                } 
+            },
+            { new: true }
+        );
+
+        return res.status(200).json({clasa});
+    }
+    catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
 const createClass = async (req, res) =>{
     try{
         const saltRounds = 12
@@ -65,7 +153,8 @@ const createClass = async (req, res) =>{
             lessons: [],
             tests: [],
             chat: [],
-            logs: [`${creator} a creat clasa cu succes!`]
+            logs: [`${creator} a creat clasa cu succes!`],
+            anunturi: []
         }
 
         const clasa = await classModel.create(data)
@@ -664,5 +753,7 @@ module.exports={
     getTestData,
     submitTest,
     getUserClasses,
-    getPublicClasses
+    getPublicClasses,
+    posteazaAnunt,
+    trimiteMesaj
 }

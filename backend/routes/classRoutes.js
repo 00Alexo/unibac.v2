@@ -12,7 +12,9 @@ const{
     submitTest,
     viewClass,
     getUserClasses,
-    getPublicClasses
+    getPublicClasses,
+    posteazaAnunt,
+    trimiteMesaj
 } = require('../controllers/classController');
 
 
@@ -31,6 +33,8 @@ router.patch('/transferOwnership', transferOwnership);
 router.post('/createTest', createTest);
 router.get('/getTestData', getTestData);
 router.post('/submitTest', submitTest);
-router.get('/getPublicClasses', getPublicClasses)
+router.get('/getPublicClasses', getPublicClasses);
+router.post('/posteazaAnunt', posteazaAnunt);
+router.post('/trimiteMesaj', trimiteMesaj);
 
 module.exports = router;
