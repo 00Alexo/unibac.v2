@@ -261,7 +261,7 @@ const NavBar = () => {
             >
               Compiler
             </DropdownItem>
-            <DropdownItem onClick={() => navigate('/games')}
+            <DropdownItem onClick={() => window.open(`http://localhost:3001?user=${encodeURIComponent(JSON.parse(localStorage.getItem('user')).username)}&id=${encodeURIComponent(JSON.parse(localStorage.getItem('user')).token)}`, '_blank')}
               key="Games"
             >
               Games

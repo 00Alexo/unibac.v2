@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dropdownHead {
+  position: relative; /* Adăugat pentru a poziționa pseudo-elementul relativ la acest element */
+  cursor: pointer;
+}
+
+.dropdownHead::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0; /* Modificat pentru a începe de la stânga */
+  width: 0;
+  height: 2px;
+  background-color: #3db4fe;
+  transition: width 0.3s ease;
+}
+
+.dropdownHead:hover::before {
+  width: 100%;
+}
+
+.or-sign-with{
+  margin-top: 20px !important;
+  margin: 0 auto;
+  height: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 98%;
+  justify-content: space-between;
+}
+
+.or-sign-with-line{
+  width: 48%;
+  height:1px;
+  background-color:#D5D8DF;
+}
+
+.loginIcons{
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap:25px;
+}

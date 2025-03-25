@@ -66,7 +66,7 @@ const Home = () => {
 
             {user &&
                 <>
-                    test
+                    testhome
                 </>
             }
 
@@ -83,6 +83,9 @@ const Home = () => {
             </footer> */}
 
             {!user && <WelcomePage/>}
+            <div style={{backgroundColor:'#222222', width:'100%', height:'25px', position:'fixed', bottom: 0}} className='flex justify-center items-center'> 
+                <p style={{marginBottom: 0, color:'white', fontSize:'0.8rem'}}> Istorie si Societate in Dimensiune Virtuala | Sectiunea Softuri educationale - Ştiinţe socio-umane | Creator: Suciu Alex, Clasa a XI-a A, Liceul  Teoretic Carei | Profesori coordonatori: Laslo Ion si Madaras Monica. <br/></p>
+            </div>
         </div>
     );
 }
