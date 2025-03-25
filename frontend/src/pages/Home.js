@@ -70,18 +70,6 @@ const Home = () => {
                 </>
             }
 
-            {/* Footer */}
-            {/* <footer className="bg-gray-800 text-white py-8">
-                <div className="container mx-auto px-4 text-center">
-                    <p className="mb-4">© 2024 EduPlatform. Toate drepturile rezervate.</p>
-                    <div className="flex justify-center gap-6">
-                        <a href="#" className="hover:text-blue-400">Termeni și condiții</a>
-                        <a href="#" className="hover:text-blue-400">Politică de confidențialitate</a>
-                        <a href="#" className="hover:text-blue-400">Contact</a>
-                    </div>
-                </div>
-            </footer> */}
-
             {!user && <WelcomePage/>}
             <div style={{backgroundColor:'#222222', width:'100%', height:'25px', position:'fixed', bottom: 0}} className='flex justify-center items-center'> 
                 <p style={{marginBottom: 0, color:'white', fontSize:'0.8rem'}}> Istorie si Societate in Dimensiune Virtuala | Sectiunea Softuri educationale - Ştiinţe socio-umane | Creator: Suciu Alex, Clasa a XI-a A, Liceul  Teoretic Carei | Profesori coordonatori: Laslo Ion si Madaras Monica. <br/></p>

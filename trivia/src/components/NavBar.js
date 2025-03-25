@@ -433,7 +433,7 @@ const NavBar = () => {
                 isBordered
                 color = "primary"
                 showFallback
-                name = {user.username.charAt(0).toUpperCase()}
+                name = {user?.username?.charAt(0).toUpperCase()}
                 as="button"
                 className="transition-transform"
                 src={userData?.avatar}

@@ -3,12 +3,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
+const { createServer } = require('http');
+const httpServer = createServer(app);
 const userRoutes = require('./routes/userRoutes');
 const minaAiRoutes = require('./routes/minaAiRoutes');
 const subiecteRoutes = require('./routes/subiecteRoutes');
 const classRoutes = require('./routes/classRoutes');
+const triviaRoutes = require('./routes/triviaRoutes');
 
-const allowedOrigin = process.env.ALLOWED_ORIGIN || 'http://localhost:3000';
+triviaRoutes(httpServer);
+
+const allowedOrigin = [process.env.ALLOWED_ORIGIN, process.env.ORIGIN_TRIVIA] || 'http://localhost:3000';
 
 const corsOptions = {
     origin: allowedOrigin,
@@ -42,6 +47,6 @@ app.use('/api/class', classRoutes);
      console.error("MongoDB connection failed:", error);
 }); 
 
-app.listen(process.env.PORT, () => {
-    console.log('listening on port', process.env.PORT);
+httpServer.listen(process.env.PORT, () => {
+    console.log('Server listening on port', process.env.PORT);
 });
