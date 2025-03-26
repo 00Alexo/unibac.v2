@@ -106,7 +106,7 @@ const Home = () => {
                         <h2 className="text-xl font-semibold text-gray-700 mb-4">Continuă ultimul subiect</h2>
                         <div className="flex items-center justify-between mb-4">
                           <div>
-                            <h3 className="font-medium text-gray-800">{userData?.subiecte.reverse()[0]._id}</h3>
+                            <h3 className="font-medium text-gray-800">{userData?.subiecte?.reverse()[0]?._id}</h3>
                             <p className="text-sm text-gray-500">Ultima accesare:  Ieri</p>
                           </div>
                           <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-md">

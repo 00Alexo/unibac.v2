@@ -88,7 +88,6 @@ const ViewProfile = () => {
 
         if(!response.ok){
             console.log(json);
-            setClase(json.error);
         }
 
         if(response.ok){
