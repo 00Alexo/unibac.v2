@@ -11,6 +11,10 @@ const Trivia = () => {
   const [currentLobby, setCurrentLobby] = useState(null);
   const [players, setPlayers] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(null);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
+  const [showAnswerFeedback, setShowAnswerFeedback] = useState(false);
+  const [isAnswerCorrect, setIsAnswerCorrect] = useState(false);
 
   const handleStartGame = (lobby) => {
     // Emit evenimentul de start pentru joc
@@ -43,7 +47,10 @@ const Trivia = () => {
     });
 
     socket.on('answerResult', (result) => {
-      alert(result.message);
+      setIsAnswerCorrect(result.isCorrect);
+      setFeedbackMessage(result.message);
+      setShowAnswerFeedback(true);
+      setTimeout(() => setShowAnswerFeedback(false), 1000);
     });
 
     socket.on('gameOver', (data) => {
@@ -72,7 +79,7 @@ const Trivia = () => {
   // Componentă pentru afișarea jucătorilor
   const PlayerGrid = ({ players }) => (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {players.map((player, index) => (
           <div 
             key={player.id}
@@ -80,11 +87,11 @@ const Trivia = () => {
                        border border-gray-200 flex items-center space-x-3
                        transition-transform hover:scale-105"
           >
-            <div className="h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold">{index + 1}</span>
+            <div className="h-12 w-12 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">{index + 1}</span>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-800">{player.username}</h3>
+              <h3 className="font-semibold text-gray-800 text-lg">{player.username}</h3>
               <p className="text-sm text-gray-500">Score: {player.score}</p>
             </div>
           </div>
@@ -130,52 +137,68 @@ const Trivia = () => {
 
   return (
     <div className='h-[calc(100vh-65px)] w-[100vw] relative'>
-      {gameState === 'lobby' && <Lobby onStartGame={handleStartGame}/>}
-      
-      {gameState === 'playing' && (
-        <div className="absolute inset-0 flex flex-col">
-          {/* Header-ul jocului */}
-          <div className="bg-white/80 backdrop-blur-md shadow-sm p-4">
-            <h1 className="text-2xl font-bold text-center text-gray-800">
-              Trivia Battle - Lobby: {currentLobby?.id}
-            </h1>
+    {gameState === 'lobby' && <Lobby onStartGame={handleStartGame}/>}
+    
+    {gameState === 'playing' && (
+      <div className="absolute inset-0 flex flex-col">
+        <div className="bg-white/80 backdrop-blur-md shadow-sm p-4">
+          <h1 className="text-2xl font-bold text-center text-gray-800">
+            Trivia Battle - Lobby: {currentLobby?.id}
+          </h1>
+        </div>
+
+        <div className="flex-1 flex flex-col items-center overflow-y-auto py-8">
+          {showAnswerFeedback && (
+            <div className={`fixed top-15 right-15 p-4 rounded-lg shadow-lg text-white 
+              ${isAnswerCorrect ? 'bg-green-500' : 'bg-red-500'} 
+              transition-opacity duration-300`}>
+              {feedbackMessage}
+            </div>
+          )}
+
+          {/* Question Section */}
+          <div className="w-full max-w-2xl px-4 mb-8">
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-semibold mb-4 text-gray-700">
+                Current Question
+              </h2>
+              {currentQuestion && (
+                <>
+                  <p className="text-gray-800 text-lg mb-6">
+                    {currentQuestion.question}
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                  {currentQuestion.answers.map((answer, index) => (
+                    <button
+                      key={answer}
+                      onClick={() => handleAnswerClick(index)}
+                      className={`p-3 rounded-lg transition-all
+                        ${selectedAnswerIndex === index 
+                          ? 'bg-blue-600 text-white' 
+                          : 'bg-blue-100 hover:bg-blue-200 text-gray-700'}
+                        ${showAnswerFeedback && currentQuestion.correctAnswer === index 
+                          ? '!bg-green-500 !text-white' 
+                          : ''}`}
+                    >
+                      {answer}
+                    </button>
+                  ))}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Zona principală a jocului */}
-          <div className="flex-1 grid grid-cols-[1fr_400px]">
-            {/* Zona Canvas 3D */}
-            <div className="relative">
-            </div>
-
-            {/* Sidebar cu jucătorii și întrebarea */}
-            <div className="bg-gray-50/95 backdrop-blur-lg p-6 border-l border-gray-200">
-              <h2 className="text-xl font-semibold mb-4 text-gray-700">Players</h2>
-              <PlayerGrid players={players} />
-
-              {/* Zona întrebării curente */}
-              <div className="mt-8 p-4 bg-white rounded-lg shadow">
-                <h3 className="text-lg font-medium mb-2">Current Question</h3>
-                {currentQuestion && (
-                  <>
-                    <p className="text-gray-600">{currentQuestion.question}</p>
-                    <div className="grid grid-cols-2 gap-3 mt-4">
-                      {currentQuestion.answers.map((answer, index) => (
-                        <button
-                          key={answer}
-                          onClick={() => handleAnswerClick(index)}
-                          className="p-2 bg-blue-100 rounded hover:bg-blue-200 transition-colors text-gray-700 text-sm"
-                        >
-                          {answer}
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
-            </div>
+          {/* Players Section */}
+          <div className="w-full max-w-4xl px-4">
+            <h2 className="text-xl font-semibold mb-4 text-gray-700 text-center">
+              Players
+            </h2>
+            <PlayerGrid players={players} />
           </div>
         </div>
-      )}
+      </div>
+    )}
       {gameState === 'finished' && currentLobby && (
       <GameOverScreen 
         players={players} 

@@ -6,22 +6,87 @@ const playerConnections = new Map();
 // Lista de întrebări
 const questions = [
   {
-    question: "What is the capital of France?",
-    answers: ["Paris", "London", "Berlin", "Madrid"],
-    correctIndex: 0
-  },
-  {
-    question: "What is 2 + 2?",
-    answers: ["3", "4", "5", "6"],
+    question: "Ce se întâmplă cu venitul producătorului dacă prețurile cresc și cererea este elastică?",
+    answers: [
+      "Venitul crește",
+      "Venitul scade mai puțin decât scade cantitatea cerută",
+      "Venitul scade mai mult decât scade cantitatea cerută",
+      "Venitul rămâne neschimbat"
+    ],
     correctIndex: 1
   },
   {
-    question: "What color do you get when you mix red and white?",
-    answers: ["Pink", "Purple", "Orange", "Brown"],
+    question: "Când utilitatea totală crește, dar cu ritm descrescător, utilitatea marginală este:",
+    answers: [
+      "Pozitivă și crescătoare",
+      "Pozitivă și descrescătoare",
+      "Negativă",
+      "Egală cu zero"
+    ],
+    correctIndex: 1
+  },
+  {
+    question: "De ce profitul este considerat principala sursă de autofinanțare a unei afaceri?",
+    answers: [
+      "Pentru că atrage investitori externi",
+      "Pentru că permite rambursarea rapidă a datoriilor",
+      "Pentru că asigură resurse interne pentru dezvoltare",
+      "Pentru că reduce costurile de marketing"
+    ],
+    correctIndex: 2
+  },
+  {
+    question: "Creșterea eficienței unei firme se încadrează în dezvoltarea:",
+    answers: [
+      "Cantitativă",
+      "Calitativă",
+      "Geografică",
+      "Temporară"
+    ],
+    correctIndex: 1
+  },
+  {
+    question: "Ce efect are reducerea cererii de locuințe noi asupra pieței muncii în construcții?",
+    answers: [
+      "Crește cererea de forță de muncă",
+      "Scade cererea de forță de muncă",
+      "Nu are niciun efect",
+      "Crește salariile muncitorilor"
+    ],
+    correctIndex: 1
+  },
+  {
+    question: "Ce se întâmplă cu cererea de bunuri inferioare atunci când venitul consumatorilor crește?",
+    answers: [
+      "Crește",
+      "Scade",
+      "Rămâne constantă",
+      "Se modifică neuniform"
+    ],
+    correctIndex: 1
+  },
+  {
+    question: "Dacă prețul unui bun elastic scade, cum se modifică venitul total al producătorului?",
+    answers: [
+      "Crește",
+      "Scade",
+      "Rămâne neschimbat",
+      "Nu se poate determina"
+    ],
     correctIndex: 0
   },
-  // adaugă alte întrebări după preferințe
+  {
+    question: "Care este efectul unui spor de preț asupra cererii pentru un bun cu elasticitate ridicată?",
+    answers: [
+      "Cererea scade semnificativ",
+      "Cererea crește semnificativ",
+      "Cererea rămâne constantă",
+      "Nu se poate determina"
+    ],
+    correctIndex: 0
+  }
 ];
+
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -170,7 +235,7 @@ module.exports = (io) => {
             });
             console.log(`Jocul s-a terminat în lobby ${lobbyId}`);
           }
-        }, 3000); // delay de 3 secunde pentru feedback
+        }, 1000); // delay de 3 secunde pentru feedback
       }
     });
 

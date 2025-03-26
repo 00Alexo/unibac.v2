@@ -184,21 +184,21 @@ const ViewClass = () => {
                         <div className='flex flex-row items-center gap-4'>
                             <Avatar
                                 showFallback
-                                name = {classData.className.charAt(0).toUpperCase()}
+                                name = {classData?.className.charAt(0).toUpperCase()}
                                 as="button"
                                 className="w-28 h-28 text-6xl transition-transform"
                                 src={classData?.avatar}
                             />
                             <div className='flex flex-col'>
                                 <p className="text-4xl font-bold text-foreground">
-                                    {classData.className}
+                                    {classData?.className}
                                 </p>
                                 <p className="text-default-500">
-                                    {classData.subject}
+                                    {classData?.subject}
                                 </p>
                             </div>
                         </div>
-                        {user?.username === classData.creator || classData.teachers.includes(user?.username) ?(
+                        {user?.username === classData?.creator || classData?.teachers?.includes(user?.username) ?(
                             <div className="flex flex-col md:flex-row gap-4 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
                             <button 
                                 onClick={() => navigate(`/clase/${classId}/profesor/posteazaLectie`)}
@@ -332,7 +332,7 @@ const ViewClass = () => {
                                                         <div>
                                                             <p className="font-semibold">
                                                                 {msg.username}
-                                                                {classData.teachers.includes(msg.username) && (
+                                                                {classData?.teachers?.includes(msg.username) && (
                                                                     <span className="ml-2 text-success-500 text-sm">Profesor</span>
                                                                 )}
                                                             </p>
