@@ -19,6 +19,7 @@ import CreateClass from './pages/CreateClass';
 import ViewClass from './pages/ViewClass';
 import ClaseList from './pages/ClaseList';
 import SubiecteTracker from './pages/SubiecteTracker';
+import Bibliografie from './pages/Bibliografie';
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function AppRoutes() {
         <Route path="/subiecte/posteaza" element={<PosteazaSubiect/>}/>
         <Route path="/subiecte/:materie" element={<Subiecte/>}/>
         <Route path="/subiecte/:materie/:subiectId" element={<ViewSubiect/>}/>
+        <Route path="/subiecteTracker" element={<SubiecteTracker/>}/>
 
         <Route path="/profile/:username" element={<ViewProfile/>}/>
         <Route path="/profile/:username/:view" element={<ViewProfile/>}/>
@@ -72,7 +74,7 @@ function AppRoutes() {
         <Route path="/clase/:classId/:view" element={<ViewClass/>}/>
         <Route path="/clase" element={<ClaseList/>}/>
 
-        <Route path="/subiecteTracker" element={<SubiecteTracker/>}/>
+        <Route path="/bibliografie" element={<Bibliografie/>}/>
 
         <Route path="/testing/cropper" element={<Cropper />} />
       </Routes>

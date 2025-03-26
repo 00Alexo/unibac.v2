@@ -201,7 +201,7 @@ const NavBar = () => {
 
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem className="dropdownHead"style={{cursor:'pointer'}}>
-          <Link color="foreground">
+          <Link onClick={() => navigate(`/bibliografie`)} color="foreground">
             Bibliografie
           </Link>
         </NavbarItem>

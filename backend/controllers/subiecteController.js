@@ -375,10 +375,13 @@ const getSubiecteRezolvateTotale = async(req, res)=>{
 
     const user = await userModel.findOne({username});
 
+    if(!user)
+      return res.status(400).json({error: "Utilizatorul nu a fost găsit!"});
+
     const subiecte = user.subiecte;
 
     res.status(200).json({stele: subiecte.length});
-  }catch(error){
+  }catch(err){
     console.error("Eroare la afișarea punctajelor:", err);
     res.status(500).json({error:err});
   }

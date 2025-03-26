@@ -11,7 +11,6 @@ const SubiecteTracker = () => {
             method: 'get',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${user.token}`
             }
         });
 
