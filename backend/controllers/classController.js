@@ -6,6 +6,131 @@ const bcrypt = require('bcryptjs');
 
 // FUNCTIONALITATI
 
+const getLectie = async(req, res)=>{
+    try{
+        const {classId, id, username} = req.params;
+
+        if(!classId || !id)
+            return res.status(400).json({error:"Invalid data!"});
+
+        const clasa = await classModel.findOne({classId});
+
+        if(!clasa)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        const lectie = clasa.lessons.find(lesson => lesson.id === id);
+
+        if(!lectie)
+            return res.status(400).json({error:"Lectie invalida!"});
+
+        if(clasa.creator !== username && !clasa.teachers.includes(username) && !clasa.students.includes(username))
+
+        res.status(200).json(lectie);
+    }catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
+const getTema= async(req, res)=>{
+    try{
+        const {classId, id, username} = req.params;
+
+        if(!classId || !id)
+            return res.status(400).json({error:"Invalid data!"});
+
+        const clasa = await classModel.findOne({classId});
+
+        if(!clasa)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        const tema = clasa.assignments.find(lesson => lesson.id === id);
+
+        if(!tema)
+            return res.status(400).json({error:"Tema invalida!"});
+
+        if(clasa.creator !== username && !clasa.teachers.includes(username) && !clasa.students.includes(username))
+
+        res.status(200).json(tema);
+    }catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
+const posteazaLectie = async(req, res)=>{
+    try{
+        const {classId, titlu, username, content} = req.body;
+
+        if(!classId)
+            return res.status(400).json({error:"Clasa invalida!"});
+        if(!titlu)
+            return res.status(400).json({error:"Titlul nu poate sa fie gol!"});
+        if(!username)
+            return res.status(400).json({error:"Trebuie sa fii logat!"});
+        if(!content)
+            return res.status(400).json({error:"Continutul nu poate sa fie gol!"});
+
+        const clasa = await classModel.findOne({classId});
+
+        if(!clasa)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        if(clasa.creator.toLowerCase() !== username.toLowerCase() && !clasa.teachers.includes(username.toLowerCase()))
+            return res.status(400).json({error:"Nu ai acces la aceasta functie!"});
+
+        const id = uuidv4()
+        await classModel.findOneAndUpdate({classId}, 
+            {$push: 
+            {lessons: {id,titlu, username, content, time: new Date().toLocaleString('ro-RO', { hour12: false })}}}, 
+            {new: true}
+        );
+
+        return res.status(200).json({id});
+    }catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
+const posteazaTema = async(req, res)=>{
+    try{
+        const {classId, titlu, username, content, deadline} = req.body;
+
+        if(!classId)
+            return res.status(400).json({error:"Clasa invalida!"});
+        if(!titlu)
+            return res.status(400).json({error:"Titlul nu poate sa fie gol!"});
+        if(!username)
+            return res.status(400).json({error:"Trebuie sa fii logat!"});
+        if(!content)
+            return res.status(400).json({error:"Continutul nu poate sa fie gol!"});
+        if(!deadline)
+            return res.status(400).json({error:"Deadline-ul nu poate sa fie gol!"});
+
+        const clasa = await classModel.findOne({classId});
+
+        if(!clasa)
+            return res.status(400).json({error:"Clasa invalida!"});
+
+        if(clasa.creator.toLowerCase() !== username.toLowerCase() && !clasa.teachers.includes(username.toLowerCase()))
+            return res.status(400).json({error:"Nu ai acces la aceasta functie!"});
+
+        const id = uuidv4()
+        await classModel.findOneAndUpdate({classId}, 
+            {$push: 
+            {assignments: {id,titlu, username, deadline, temeTrimise: [], 
+                content, time: new Date().toLocaleString('ro-RO', { hour12: false })}}}, 
+            {new: true}
+        );
+
+        return res.status(200).json({id});
+    }catch(err){
+        console.error(err.message);
+        res.status(400).json(err.message);
+    }
+}
+
 const trimiteMesaj = async(req, res)=>{
     try{
         const {username, content, classId, avatar} = req.body;
@@ -755,5 +880,9 @@ module.exports={
     getUserClasses,
     getPublicClasses,
     posteazaAnunt,
-    trimiteMesaj
+    trimiteMesaj,
+    posteazaLectie,
+    getLectie,
+    posteazaTema,
+    getTema
 }

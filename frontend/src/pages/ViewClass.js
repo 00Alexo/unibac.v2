@@ -13,6 +13,7 @@ import { MailIcon, EyeFilledIcon, EyeSlashFilledIcon } from './SignUp';
 import { useJoinClass } from '../hooks/useJoinClass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faEdit, faTrash, faComments, faSmile, faPaperclip, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faFileAlt, faTasks } from '@fortawesome/free-solid-svg-icons';
 
 const ViewClass = () => {
     const {user} = useAuthContext();
@@ -179,7 +180,7 @@ const ViewClass = () => {
             {classData && !error &&  (
                 <div className='flex flex-col w-[80%] min-h-[calc(100vh-70px)] pt-8 mx-auto relative z-10'>
                     {/* div poza profil */}
-                    <div>
+                    <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row items-center gap-4'>
                             <Avatar
                                 showFallback
@@ -197,6 +198,33 @@ const ViewClass = () => {
                                 </p>
                             </div>
                         </div>
+                        {user?.username === classData.creator || classData.teachers.includes(user?.username) ?(
+                            <div className="flex flex-col md:flex-row gap-4 p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
+                            <button 
+                                onClick={() => navigate(`/clase/${classId}/profesor/posteazaLectie`)}
+                                className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <FontAwesomeIcon icon={faBook} className="text-lg" />
+                                <span className="text-sm md:text-base">Postează Lecție</span>
+                            </button>
+                        
+                            <button
+                                onClick={() => navigate(`/clase/${classId}/profesor/posteazaTema`)}
+                                className="flex-1 bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <FontAwesomeIcon icon={faTasks} className="text-lg" />
+                                <span className="text-sm md:text-base">Postează Temă</span>
+                            </button>
+
+                            <button
+                                onClick={() => navigate(`/clase/${classId}/profesor/posteazaTest`)}
+                                className="flex-1 bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
+                            >
+                                <FontAwesomeIcon icon={faFileAlt} className="text-lg" />
+                                <span className="text-sm md:text-base">Postează Test</span>
+                            </button>
+                        </div>
+                        ) : <></>}
                     </div>
                     {/* div descriere + statistici*/}
                     <div className='flex justify-between w-[100%] mt-8 max-h-[170px]'>
@@ -344,6 +372,77 @@ const ViewClass = () => {
                                             </Button>
                                         </div>
                                     </div>
+                                </div>
+                            ) : view?.toLowerCase() == 'lectii' ? (
+                                <div className='border border-default-200 rounded-lg p-4 bg-slate-100 shadow-md h-[37vh] max-h-[340px] flex gap-4 flex-col'>
+                                    <p className='bold text-2xl'> Lecții </p>
+                                    <ScrollShadow hideScrollBar className="space-y-4 max-h-[300px]">
+                                        {classData?.lessons && [...classData?.lessons].reverse().map((lectie, index) => (
+                                            <div 
+                                                onClick={() => navigate(`/clase/${classId}/lectii/${lectie.id}`)}
+                                                key={lectie.id} 
+                                                className="border border-default-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                                            >
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <div>
+                                                        <h3 className="font-semibold text-lg">{lectie.titlu}</h3>
+                                                        <div className="flex items-center gap-2 mt-1">
+                                                            <Avatar 
+                                                                name={lectie.username} 
+                                                                size="sm" 
+                                                                className="text-tiny"
+                                                            />
+                                                            <span className="text-default-500 text-sm">{lectie.username}</span>
+                                                        </div>
+                                                    </div>
+                                                    <span className="text-default-400 text-sm">{lectie.time}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </ScrollShadow>
+
+                                    {classData?.lectii?.length === 0 && (
+                                        <div className="text-center py-8">
+                                            <p className="text-default-500">Nu există lecții momentan</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ) :  view?.toLowerCase() == 'teme' ? (
+                                <div className='border border-default-200 rounded-lg p-4 bg-slate-100 shadow-md h-[37vh] max-h-[340px] flex gap-4 flex-col'>
+                                    <p className='bold text-2xl'> Teme </p>
+                                    <ScrollShadow hideScrollBar className="space-y-4 max-h-[300px]">
+                                        {classData?.assignments && [...classData?.assignments].reverse().map((lectie, index) => (
+                                            <div 
+                                                onClick={() => navigate(`/clase/${classId}/teme/${lectie.id}`)}
+                                                key={lectie.id} 
+                                                className="border border-default-200 rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                                            >
+                                                <div className="flex justify-between items-start mb-2">
+                                                    <div>
+                                                        <h3 className="font-semibold text-lg">{lectie.titlu}</h3>
+                                                        <div className="flex items-center gap-2 mt-1">
+                                                            <Avatar 
+                                                                name={lectie.username} 
+                                                                size="sm" 
+                                                                className="text-tiny"
+                                                            />
+                                                            <span className="text-default-500 text-sm">{lectie.username}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div className='flex flex-col'>
+                                                        <span className="text-default-400 text-sm">{lectie.time}</span>
+                                                        <span className="text-default-400 text-sm">Deadline: {lectie.deadline}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </ScrollShadow>
+
+                                    {classData?.assignments?.length === 0 && (
+                                        <div className="text-center py-8">
+                                            <p className="text-default-500">Nu există teme momentan</p>
+                                        </div>
+                                    )}
                                 </div>
                             ) : <></>}
                         </div>

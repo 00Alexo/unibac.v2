@@ -36,8 +36,8 @@ export default function WelcomeHome() {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="text-xl  leading-relaxed mb-8 max-w-xl"
           >
-            Start your studies now and prepare for university in the best way possible alongside our virtual assistant, 
-            auto-graded exam exercises, and teacher-organised classes and materials.
+            Începe studiile chiar acum și pregătește-te pentru universitate în cel mai bun mod posibil alături de asistentul nostru virtual, 
+            exerciții auto-evaluate și cursuri și materiale organizate de profesori.
           </motion.p>
           
           <motion.div

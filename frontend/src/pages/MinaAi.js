@@ -354,18 +354,18 @@ const MinaAi = () => {
                     }
                     {prompts.length == 0 &&
                     <p style={{fontSize:'1.2rem'}}>
-                        Mina ignites minds with wisdom, making everything brighter...
+                        Mina aprinde mințile cu înțelepciune, făcând totul mai luminos...
                     </p>
                     }
                     {prompts.length == 0 && (
                                             <div className="flex w-[100%] mx-auto flex-row justify-evenly mt-12 mina-contains-prompt-ideas">
                                             <div className="z-20 prompt-ideas-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
-                                                    <p> What are data structures and why are they important in programming?</p>
+                                                    <p> Cum afectează elasticitatea cererii venitul producătorului atunci când prețurile cresc?</p>
                                                 </div>
                                                 <SendIcon className="pb-3 pr-4 iconitaSend" style={{width:'40px', height:'40px', cursor:'pointer'}}
                                                       onMouseEnter={() =>{
-                                                        setPrompt("What are data structures and why are they important in programming?");
+                                                        setPrompt("Cum afectează elasticitatea cererii venitul producătorului atunci când prețurile cresc?");
                                                     }}
                                                     onClick={() =>{
                                                         getPrompt();
@@ -374,11 +374,11 @@ const MinaAi = () => {
                                             </div>
                                             <div className="z-20 prompt-ideas-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
-                                                    <p> Differences between object-oriented programming and functional programming?</p>
+                                                    <p> De ce o reducere a cererii de locuințe noi ar duce la scăderea cererii de forță de muncă în construcții?</p>
                                                 </div>
                                                 <SendIcon 
                                                     onMouseEnter={() =>{
-                                                        setPrompt("What are the differences between object-oriented programming and functional programming?");
+                                                        setPrompt("De ce o reducere a cererii de locuințe noi ar duce la scăderea cererii de forță de muncă în construcții?");
                                                     }}
                                                     onClick={() =>{
                                                         getPrompt();
@@ -388,11 +388,11 @@ const MinaAi = () => {
                                             </div>
                                             <div className="z-20 prompt-ideas-mina prompt-hidden-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
-                                                    <p> What are the most important principles in object-oriented programming?</p>
+                                                    <p> Care este formula de calcul a costurilor salariale totale dacă cheltuielile salariale fixe sunt 4 mil. u.m., iar cele variabile sunt 3 mil. u.m.?</p>
                                                 </div>
                                                 <SendIcon 
                                                     onMouseEnter={() =>{
-                                                        setPrompt("What are the most important principles in object-oriented programming?");
+                                                        setPrompt("Care este formula de calcul a costurilor salariale totale dacă cheltuielile salariale fixe sunt 4 mil. u.m., iar cele variabile sunt 3 mil. u.m.?");
                                                     }}
                                                     onClick={() =>{
                                                         getPrompt();
@@ -402,11 +402,11 @@ const MinaAi = () => {
                                             </div>
                                             <div className="z-20 prompt-ideas-mina prompt-hidden-mina" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                                                 <div className="pl-4 pt-2 pr-4">
-                                                    <p> How can you optimize the performance of a web application?</p>
+                                                    <p> De ce profitul este considerat principala sursă de autofinanțare a dezvoltării unei afaceri?</p>
                                                 </div>
                                                 <SendIcon 
                                                     onMouseEnter={() =>{
-                                                        setPrompt("How can you optimize the performance of a web application?");
+                                                        setPrompt("De ce profitul este considerat principala sursă de autofinanțare a dezvoltării unei afaceri?");
                                                     }}
                                                     onClick={() =>{
                                                         getPrompt();

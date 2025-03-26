@@ -16,7 +16,7 @@ const Bibliografie = () => {
                             <h3 className="font-medium text-gray-800">Client-side</h3>
                             <p className="text-md text-gray-600">
                                 React (CRA), NextUI, TailwindCSS, FontAwesome, Nivo, React-Pdf-Viewer, TSParticles, ThreeJS, React-Three-Fiber, React-Three-Drei,
-                                FramerMotion, Marked, Pdfjs-Dist, React-Router-Dom, VantaJS, HighlightJS, Date-Fns
+                                FramerMotion, Marked, Pdfjs-Dist, React-Router-Dom, VantaJS, HighlightJS, Date-Fns, TinyMCE
                             </p>
                         </li>
                         <li className="border-l-4 border-green-500 pl-4">
@@ -62,12 +62,12 @@ const Bibliografie = () => {
                         </div>
 
                         <div className="p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors cursor-pointer"
-                            onClick={() => window.open('https://threejs.org/docs/')}>
+                            onClick={() => window.open('https://manuale.edu.ro/manuale/Clasa%20a%20XI-a/Economie/Corint/A375.pdf')}>
                             <div className="flex items-center text-blue-600">
                                 <svg className="w-5 h-5 mr-2 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M10 20a10 10 0 1 1 0-20 10 10 0 0 1 0 20zM6.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm7 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm-7.7 3.2a4 4 0 0 1 7.4 0 1 1 0 1 1-7.4 0z"/>
                                 </svg>
-                                <span className="text-sm">ThreeJS && VantaJS Documentation</span>
+                                <span className="text-sm">Manual Economie, Editura Corint</span>
                             </div>
                         </div>
 

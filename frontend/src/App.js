@@ -20,6 +20,10 @@ import ViewClass from './pages/ViewClass';
 import ClaseList from './pages/ClaseList';
 import SubiecteTracker from './pages/SubiecteTracker';
 import Bibliografie from './pages/Bibliografie';
+import PosteazaLectie from './pages/PosteazaLectie';
+import ViewLectie from './pages/ViewLectie';
+import PosteazaTema from './pages/PosteazaTema';
+import ViewTema from './pages/ViewTema';
 
 function App() {
   return (
@@ -73,6 +77,10 @@ function AppRoutes() {
         <Route path="/clase/:classId" element={<ViewClass/>}/>
         <Route path="/clase/:classId/:view" element={<ViewClass/>}/>
         <Route path="/clase" element={<ClaseList/>}/>
+        <Route path="/clase/:classId/profesor/posteazaLectie" element={<PosteazaLectie/>}/>
+        <Route path="/clase/:classId/lectii/:id" element={<ViewLectie/>}/>
+        <Route path="/clase/:classId/profesor/posteazaTema" element={<PosteazaTema/>}/>
+        <Route path="/clase/:classId/teme/:id" element={<ViewTema/>}/>
 
         <Route path="/bibliografie" element={<Bibliografie/>}/>
 

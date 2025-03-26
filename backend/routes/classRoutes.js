@@ -14,7 +14,11 @@ const{
     getUserClasses,
     getPublicClasses,
     posteazaAnunt,
-    trimiteMesaj
+    trimiteMesaj,
+    posteazaLectie,
+    getLectie,
+    getTema,
+    posteazaTema,
 } = require('../controllers/classController');
 
 
@@ -36,5 +40,9 @@ router.post('/submitTest', submitTest);
 router.get('/getPublicClasses', getPublicClasses);
 router.post('/posteazaAnunt', posteazaAnunt);
 router.post('/trimiteMesaj', trimiteMesaj);
+router.post('/posteazaLectie', posteazaLectie);
+router.post('/posteazaTema', posteazaTema)
+router.get('/getLectie/:classId/:id/:username', getLectie);
+router.get('/getTema/:classId/:id/:username', getTema);
 
 module.exports = router;
