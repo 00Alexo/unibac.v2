@@ -325,7 +325,7 @@ const ViewProfile = () => {
                     </div>
                     <div className='border border-secondary rounded-lg bg-slate-100 shadow-md w-[68.5%] pr-10 pl-10 pt-4 pb-4'>
                         <div className='flex flex-row justify-between'>
-                            <p className='text-2xl'> {totalSubiecte} de subiecte rezolvate in ultimul an</p>
+                            <p className='text-2xl'> {totalSubiecte} de subiecte trimise in ultimul an</p>
                             <Select
                                 className="max-w-28" color='primary'
                                 placeholder={anSelectat}

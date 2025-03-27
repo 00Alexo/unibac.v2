@@ -150,7 +150,7 @@ const Trivia = () => {
         <div className="flex-1 flex flex-col items-center overflow-y-auto py-8">
           {showAnswerFeedback && (
             <div className={`fixed top-15 right-15 p-4 rounded-lg shadow-lg text-white 
-              ${isAnswerCorrect ? 'bg-green-500' : 'bg-red-500'} 
+              ${feedbackMessage == 'Răspuns corect!' ? 'bg-green-500' : 'bg-red-500'} 
               transition-opacity duration-300`}>
               {feedbackMessage}
             </div>
